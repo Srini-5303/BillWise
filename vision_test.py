@@ -22,7 +22,7 @@ def extract_text(path):
 def main():
 
     # change this if your file name differs
-    target = "bill10"
+    target = "bill1"
 
     for f in os.listdir(RAW_FOLDER):
 
