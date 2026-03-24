@@ -5,14 +5,14 @@ import threading
 from datetime import datetime
 from google.cloud import storage
 
-# ── Set your bucket name as a Cloud Run env var ──
+
 BUCKET_NAME = os.environ["GCS_BUCKET_NAME"]
 CSV_BLOB    = "bills_output.csv"
 HEADERS     = ["Serial_No", "Bill_File", "Store_Name", "Invoice_Date",
-               "Total", "Card_Used", "Received_At", "Sender"]
+               "Total", "Card_Used", "Received_At", "Sender", "Image_Hash"]
 
-_lock          = threading.Lock()
-_gcs_client    = storage.Client()          # uses Cloud Run's service account automatically
+_lock       = threading.Lock()
+_gcs_client = storage.Client()
 
 
 def _get_bucket():
@@ -20,21 +20,21 @@ def _get_bucket():
 
 
 def _read_rows() -> list[list]:
-    """Download current CSV from GCS and parse it. Returns all rows (no header)."""
+    """Download current CSV from GCS and return all rows (no header)."""
     bucket = _get_bucket()
     blob   = bucket.blob(CSV_BLOB)
 
     if not blob.exists():
         return []
-
+    
     content = blob.download_as_text(encoding="utf-8")
     reader  = csv.reader(io.StringIO(content))
     rows    = list(reader)
-    return rows[1:] if rows else []  
+    return rows[1:] if rows else []
 
 
 def _write_rows(rows: list[list]):
-    """Upload the full CSV (header + all rows) back to GCS."""
+    """Upload full CSV (header + all rows) back to GCS."""
     buf = io.StringIO()
     w   = csv.writer(buf)
     w.writerow(HEADERS)
@@ -45,22 +45,84 @@ def _write_rows(rows: list[list]):
     blob.upload_from_string(buf.getvalue(), content_type="text/csv")
 
 
-def append_bill(filename, store, date, total, card, sender) -> int:
+def _fuzzy_score(s1: str, s2: str) -> float:
     """
-    Thread-safe append of one bill row to the GCS CSV.
-    Returns the assigned serial number.
+    Simple character-level fuzzy match score between 0.0 and 1.0.
+    Uses longest common subsequence ratio — no extra libraries needed.
     """
+    s1, s2 = s1.upper().strip(), s2.upper().strip()
+    if not s1 or not s2:
+        return 0.0
+    if s1 == s2:
+        return 1.0
+
+    # Build LCS matrix
+    m, n   = len(s1), len(s2)
+    dp     = [[0] * (n + 1) for _ in range(m + 1)]
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if s1[i-1] == s2[j-1]:
+                dp[i][j] = dp[i-1][j-1] + 1
+            else:
+                dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+
+    lcs_len = dp[m][n]
+    return (2.0 * lcs_len) / (m + n)
+
+
+# Minimum fuzzy score to consider store names a match
+STORE_SIMILARITY_THRESHOLD = 0.85
+
+
+def is_duplicate(image_hash: str, store: str, date: str, total: str):
+    """
+    Check both duplicate layers against existing CSV rows.
+
+    Layer 1 — exact image hash match (any sender)
+    Layer 2 — fuzzy store + exact date + exact total match
+
+    Returns (True, matching_row) if duplicate, else (False, None).
+    Col indices: 0=Serial, 1=File, 2=Store, 3=Date, 4=Total, 5=Card,
+                 6=ReceivedAt, 7=Sender, 8=Hash
+    """
+    rows = _read_rows()
+
+    for row in rows:
+        if len(row) < 9:
+            continue
+
+        existing_hash  = row[8].strip()
+        existing_store = row[2].strip()
+        existing_date  = row[3].strip()
+        existing_total = row[4].strip()
+
+        # Layer 1 — same image
+        if image_hash and existing_hash == image_hash:
+            return True, row
+
+        # Layer 2 — same bill content
+        date_match  = (date  and existing_date  == date)
+        total_match = (total and existing_total == str(total))
+        store_score = _fuzzy_score(store, existing_store)
+        store_match = store_score >= STORE_SIMILARITY_THRESHOLD
+
+        if date_match and total_match and store_match:
+            return True, row
+
+    return False, None
+
+
+def append_bill(filename, store, date, total, card, sender, image_hash) -> int:
+    """Thread-safe append of one bill row to GCS CSV. Returns serial number."""
     with _lock:
-        existing = _read_rows()
-        serial   = len(existing) + 1
-        received = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
-
-        new_row  = [serial, filename, store,
-                    date  or "Not found",
-                    total or "Not found",
-                    card, received, sender]
-
+        existing    = _read_rows()
+        serial      = len(existing) + 1
+        received    = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+        new_row     = [serial, filename, store,
+                       date  or "Not found",
+                       total or "Not found",
+                       card, received, sender, image_hash]
         existing.append(new_row)
         _write_rows(existing)
-
+        
     return serial
