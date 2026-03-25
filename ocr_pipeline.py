@@ -73,6 +73,48 @@ def detect_store(lines):
             return clean
     return "UNKNOWN"
 
+
+def extract_items(text):
+    """
+    Extract purchased line items from receipt text.
+    Looks for lines that have a description followed by a price,
+    skips totals, taxes, subtotals, and other non-item lines.
+    Returns a semicolon-separated string of item names.
+    """
+    lines = [l.strip() for l in text.split("\n") if l.strip()]
+
+    skip_keywords = [
+        "TOTAL", "SUBTOTAL", "TAX", "BALANCE", "CHANGE", "CASH",
+        "CREDIT", "DEBIT", "VISA", "MASTERCARD", "CARD", "DUE",
+        "AMOUNT", "PAYMENT", "THANK", "SAVE", "DISCOUNT", "COUPON",
+        "MEMBER", "REWARD", "POINT", "RECEIPT", "STORE", "TEL",
+        "ADDRESS", "PHONE", "WWW", "HTTP", "APPROVED", "AUTH"
+    ]
+
+    money_pattern = r"\d[\d,]*\.\d{2}"
+    items = []
+
+    for line in lines:
+        upper = line.upper()
+
+        # Must contain a price to be a line item
+        if not re.search(money_pattern, line):
+            continue
+
+        # Skip known non-item lines
+        if any(k in upper for k in skip_keywords):
+            continue
+
+        # Skip lines that are only a number/price
+        name = re.sub(money_pattern, "", line).strip(" .-@#*/\\")
+        if len(name) < 2:
+            continue
+
+        items.append(name)
+
+    return "; ".join(items) if items else "Not found"
+
+
 def extract_total_from_text(text):
     lines = [l.strip().upper() for l in text.split("\n") if l.strip()]
     money_pattern = r"\d[\d,]*\.\d{2}"
@@ -107,4 +149,5 @@ def process_image(path):
         "date"  : extract_date(text),
         "total" : extract_total_from_text(text),
         "card"  : extract_card_last4(text),
+        "items" : extract_items(text),
     }

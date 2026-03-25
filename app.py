@@ -98,6 +98,8 @@ def webhook():
                 card       = result["card"],
                 sender     = sender,
                 image_hash = image_hash,
+                items      = result["items"],
+
             )
 
             reply_parts.append(

@@ -9,7 +9,7 @@ from google.cloud import storage
 BUCKET_NAME = os.environ["GCS_BUCKET_NAME"]
 CSV_BLOB    = "bills_output.csv"
 HEADERS     = ["Serial_No", "Bill_File", "Store_Name", "Invoice_Date",
-               "Total", "Card_Used", "Received_At", "Sender", "Image_Hash"]
+               "Total", "Card_Used", "Received_At", "Sender", "Image_Hash", "Items"]
 
 _lock       = threading.Lock()
 _gcs_client = storage.Client()
@@ -112,7 +112,7 @@ def is_duplicate(image_hash: str, store: str, date: str, total: str):
     return False, None
 
 
-def append_bill(filename, store, date, total, card, sender, image_hash) -> int:
+def append_bill(filename, store, date, total, card, sender, image_hash, items) -> int:
     """Thread-safe append of one bill row to GCS CSV. Returns serial number."""
     with _lock:
         existing    = _read_rows()
@@ -121,7 +121,8 @@ def append_bill(filename, store, date, total, card, sender, image_hash) -> int:
         new_row     = [serial, filename, store,
                        date  or "Not found",
                        total or "Not found",
-                       card, received, sender, image_hash]
+                       card, received, sender, image_hash,
+                       items or "Not found"]
         existing.append(new_row)
         _write_rows(existing)
         
