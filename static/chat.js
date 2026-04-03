@@ -1,6 +1,6 @@
-// chat.js — Bill Assistant web UI logic
+// chat.js — BillWise Assistant
 
-// ── Session ID (persisted in localStorage) ────────────────────────────────────
+// ── Session ID ────────────────────────────────────────────────────────────────
 function getSessionId() {
   let id = localStorage.getItem("bill_chat_session");
   if (!id) {
@@ -9,18 +9,23 @@ function getSessionId() {
   }
   return id;
 }
-
 const SESSION_ID = getSessionId();
 
 // ── DOM refs ──────────────────────────────────────────────────────────────────
-const messagesEl  = document.getElementById("messages");
-const inputEl     = document.getElementById("input");
-const btnSend     = document.getElementById("btn-send");
-const btnReset    = document.getElementById("btn-reset");
-const btnReload   = document.getElementById("btn-reload");
+const messagesEl = document.getElementById("messages");
+const inputEl    = document.getElementById("input");
+const btnSend    = document.getElementById("btn-send");
+const btnReset   = document.getElementById("btn-reset");
+const btnReload  = document.getElementById("btn-reload");
+
+// ── Auto-resize textarea ──────────────────────────────────────────────────────
+function autoResize() {
+  inputEl.style.height = "auto";
+  inputEl.style.height = inputEl.scrollHeight + "px";
+}
+inputEl.addEventListener("input", autoResize);
 
 // ── Markdown-lite renderer ────────────────────────────────────────────────────
-// Handles **bold**, `code`, markdown tables, and line breaks. No external lib.
 function renderMarkdown(text) {
   if (!text) return "";
 
@@ -38,34 +43,56 @@ function renderMarkdown(text) {
 
   // **bold**
   text = text.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-
   // `inline code`
   text = text.replace(/`([^`]+)`/g, "<code>$1</code>");
-
   // *italic*
   text = text.replace(/\*([^*]+)\*/g, "<em>$1</em>");
-
   // Line breaks
   text = text.replace(/\n/g, "<br>");
 
   return text;
 }
 
-// ── Bubble helpers ────────────────────────────────────────────────────────────
-function appendBubble(role, html, sqlText) {
+// ── Append message ────────────────────────────────────────────────────────────
+function appendMessage(role, html, sqlText) {
   const wrap = document.createElement("div");
-  wrap.className = `bubble ${role}`;
+  wrap.className = `message ${role}`;
+
+  // Avatar
+  const avatar = document.createElement("div");
+  avatar.className = "avatar";
+
+  if (role === "assistant" || role === "assistant error") {
+    avatar.className += " bw-avatar";
+    avatar.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+      <rect x="9" y="3" width="6" height="4" rx="1"/>
+      <line x1="9" y1="12" x2="15" y2="12"/>
+      <line x1="9" y1="16" x2="13" y2="16"/>
+    </svg>`;
+  } else if (role === "user") {
+    avatar.className += " user-avatar";
+    avatar.textContent = "You";
+  }
+
+  wrap.appendChild(avatar);
+
+  // Body
+  const body = document.createElement("div");
+  body.className = "message-body";
 
   const content = document.createElement("div");
-  content.className = "bubble-content";
+  content.className = "message-content";
   content.innerHTML = html;
-  wrap.appendChild(content);
+  body.appendChild(content);
 
-  // "Show SQL" toggle for assistant messages that have SQL
-  if (role === "assistant" && sqlText) {
+  // SQL toggle
+  if ((role === "assistant" || role === "assistant error") && sqlText) {
     const toggle = document.createElement("button");
     toggle.className = "sql-toggle";
-    toggle.textContent = "Show SQL";
+    toggle.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+    </svg> Show SQL`;
 
     const pre = document.createElement("pre");
     pre.className = "sql-block hidden";
@@ -73,20 +100,44 @@ function appendBubble(role, html, sqlText) {
 
     toggle.addEventListener("click", () => {
       const isHidden = pre.classList.toggle("hidden");
-      toggle.textContent = isHidden ? "Show SQL" : "Hide SQL";
+      toggle.innerHTML = isHidden
+        ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Show SQL`
+        : `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Hide SQL`;
     });
 
-    wrap.appendChild(toggle);
-    wrap.appendChild(pre);
+    body.appendChild(toggle);
+    body.appendChild(pre);
   }
 
+  wrap.appendChild(body);
   messagesEl.appendChild(wrap);
   messagesEl.scrollTop = messagesEl.scrollHeight;
   return wrap;
 }
 
+// ── Typing indicator ──────────────────────────────────────────────────────────
 function showTyping() {
-  return appendBubble("assistant typing-wrap", "<span class='typing'><span></span><span></span><span></span></span>", null);
+  const wrap = document.createElement("div");
+  wrap.className = "message assistant";
+
+  const avatar = document.createElement("div");
+  avatar.className = "avatar bw-avatar";
+  avatar.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+    <rect x="9" y="3" width="6" height="4" rx="1"/>
+    <line x1="9" y1="12" x2="15" y2="12"/>
+    <line x1="9" y1="16" x2="13" y2="16"/>
+  </svg>`;
+  wrap.appendChild(avatar);
+
+  const body = document.createElement("div");
+  body.className = "message-body";
+  body.innerHTML = `<div class="typing-dots"><span></span><span></span><span></span></div>`;
+  wrap.appendChild(body);
+
+  messagesEl.appendChild(wrap);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return wrap;
 }
 
 // ── Send message ──────────────────────────────────────────────────────────────
@@ -95,10 +146,11 @@ async function sendMessage() {
   if (!text) return;
 
   inputEl.value = "";
+  inputEl.style.height = "auto";
   inputEl.disabled = true;
   btnSend.disabled = true;
 
-  appendBubble("user", escapeHtml(text), null);
+  appendMessage("user", escapeHtml(text), null);
   const typingEl = showTyping();
 
   try {
@@ -112,13 +164,13 @@ async function sendMessage() {
     typingEl.remove();
 
     if (data.success) {
-      appendBubble("assistant", renderMarkdown(data.answer), data.sql || null);
+      appendMessage("assistant", renderMarkdown(data.answer), data.sql || null);
     } else {
-      appendBubble("assistant error", `⚠️ ${escapeHtml(data.error || "Something went wrong.")}`, null);
+      appendMessage("assistant error", `⚠️ ${escapeHtml(data.error || "Something went wrong.")}`, null);
     }
   } catch (err) {
     typingEl.remove();
-    appendBubble("assistant error", "⚠️ Network error — please try again.", null);
+    appendMessage("assistant error", "⚠️ Network error — please try again.", null);
   } finally {
     inputEl.disabled = false;
     btnSend.disabled = false;
@@ -134,12 +186,11 @@ async function resetChat() {
     body:    JSON.stringify({ session_id: SESSION_ID }),
   });
   messagesEl.innerHTML = "";
-  appendBubble("assistant", "Chat reset. What would you like to know?", null);
+  appendMessage("assistant", "Chat reset. What would you like to know?", null);
 }
 
 async function reloadData() {
   btnReload.disabled = true;
-  btnReload.textContent = "Reloading…";
   const res  = await fetch("/api/reload", {
     method:  "POST",
     headers: { "Content-Type": "application/json" },
@@ -147,8 +198,7 @@ async function reloadData() {
   });
   const data = await res.json();
   btnReload.disabled = false;
-  btnReload.textContent = "↺ Reload data";
-  appendBubble("assistant", data.message || "Data reloaded.", null);
+  appendMessage("assistant", data.message || "Data reloaded.", null);
 }
 
 // ── Utility ───────────────────────────────────────────────────────────────────
@@ -160,7 +210,7 @@ function escapeHtml(str) {
     .replace(/"/g, "&quot;");
 }
 
-// ── Event listeners ───────────────────────────────────────────────────────────
+// ── Events ────────────────────────────────────────────────────────────────────
 btnSend.addEventListener("click", sendMessage);
 btnReset.addEventListener("click", resetChat);
 btnReload.addEventListener("click", reloadData);
