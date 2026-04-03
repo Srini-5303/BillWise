@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bill Assistant</title>
+  <link rel="stylesheet" href="/static/chat.css" />
+</head>
+<body>
+
+  <div id="app">
+
+    <!-- Header -->
+    <header>
+      <div class="header-inner">
+        <span class="logo">🧾 Bill Assistant</span>
+        <div class="header-actions">
+          <button id="btn-reload" title="Reload data from storage">↺ Reload data</button>
+          <button id="btn-reset"  title="Clear conversation">✕ Reset chat</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Message thread -->
+    <main id="messages">
+      <div class="bubble assistant">
+        <div class="bubble-content">
+          👋 Hi! I can answer questions about your restaurant spending.<br>
+          Try asking: <em>"How much did we spend last month?"</em> or
+          <em>"Which store did we visit most?"</em>
+        </div>
+      </div>
+    </main>
+
+    <!-- Input bar -->
+    <footer id="input-bar">
+      <textarea
+        id="input"
+        rows="2"
+        placeholder="Ask a question about your bills… (Enter to send, Shift+Enter for newline)"
+        autofocus
+      ></textarea>
+      <button id="btn-send">Send</button>
+    </footer>
+
+  </div>
+
+  <script src="/static/chat.js"></script>
+</body>
+</html>

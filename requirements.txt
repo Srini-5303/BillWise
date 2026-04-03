@@ -4,3 +4,7 @@ google-cloud-vision>=3.7.0
 google-cloud-storage>=2.16.0
 requests>=2.31.0
 gunicorn>=21.2.0
+google-generativeai>=0.7.0
+duckdb>=0.10.0
+pandas>=2.2.0
+tabulate>=0.9.0
