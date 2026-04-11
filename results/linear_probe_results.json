@@ -1,0 +1,196 @@
+{
+  "distilbert-base-uncased": {
+    "test_accuracy": 0.650101,
+    "test_macro_f1": 0.636101,
+    "per_class_f1": {
+      "Bakery & Flour": 0.638,
+      "Beverages": 0.7503,
+      "Dairy": 0.7072,
+      "Frozen / Processed": 0.4766,
+      "Fruits": 0.605,
+      "Grains & Staples": 0.6247,
+      "Herbs": 0.4348,
+      "Meat": 0.7116,
+      "Oils & Fats": 0.7097,
+      "Poultry": 0.73,
+      "Pulses & Beans": 0.5691,
+      "Sauces & Condiments": 0.6709,
+      "Seafood": 0.7137,
+      "Snacks & Ready-to-Eat": 0.717,
+      "Spices & Seasonings": 0.5654,
+      "Vegetables": 0.5534
+    },
+    "best_val_macro_f1": 0.633199,
+    "best_epoch": 10,
+    "training_history": [
+      {
+        "epoch": 1,
+        "train_loss": 1.972356,
+        "val_loss": 1.555589,
+        "val_accuracy": 0.556851,
+        "val_macro_f1": 0.494175
+      },
+      {
+        "epoch": 2,
+        "train_loss": 1.554566,
+        "val_loss": 1.369273,
+        "val_accuracy": 0.593303,
+        "val_macro_f1": 0.558023
+      },
+      {
+        "epoch": 3,
+        "train_loss": 1.432593,
+        "val_loss": 1.299115,
+        "val_accuracy": 0.610469,
+        "val_macro_f1": 0.586091
+      },
+      {
+        "epoch": 4,
+        "train_loss": 1.367713,
+        "val_loss": 1.246189,
+        "val_accuracy": 0.62202,
+        "val_macro_f1": 0.599319
+      },
+      {
+        "epoch": 5,
+        "train_loss": 1.328094,
+        "val_loss": 1.234827,
+        "val_accuracy": 0.624563,
+        "val_macro_f1": 0.604833
+      },
+      {
+        "epoch": 6,
+        "train_loss": 1.305595,
+        "val_loss": 1.215422,
+        "val_accuracy": 0.629437,
+        "val_macro_f1": 0.616193
+      },
+      {
+        "epoch": 7,
+        "train_loss": 1.282813,
+        "val_loss": 1.201393,
+        "val_accuracy": 0.631027,
+        "val_macro_f1": 0.615577
+      },
+      {
+        "epoch": 8,
+        "train_loss": 1.268767,
+        "val_loss": 1.171008,
+        "val_accuracy": 0.639186,
+        "val_macro_f1": 0.625052
+      },
+      {
+        "epoch": 9,
+        "train_loss": 1.249884,
+        "val_loss": 1.171415,
+        "val_accuracy": 0.637279,
+        "val_macro_f1": 0.623227
+      },
+      {
+        "epoch": 10,
+        "train_loss": 1.243929,
+        "val_loss": 1.133898,
+        "val_accuracy": 0.65328,
+        "val_macro_f1": 0.633199
+      }
+    ],
+    "checkpoint": "checkpoints\\distilbert-base-uncased_linear_probe_best.pt"
+  },
+  "roberta-base": {
+    "test_accuracy": 0.577408,
+    "test_macro_f1": 0.465077,
+    "per_class_f1": {
+      "Bakery & Flour": 0.5338,
+      "Beverages": 0.7032,
+      "Dairy": 0.6547,
+      "Frozen / Processed": 0.4344,
+      "Fruits": 0.588,
+      "Grains & Staples": 0.5452,
+      "Herbs": 0.0,
+      "Meat": 0.5899,
+      "Oils & Fats": 0.4105,
+      "Poultry": 0.0592,
+      "Pulses & Beans": 0.0263,
+      "Sauces & Condiments": 0.6756,
+      "Seafood": 0.5266,
+      "Snacks & Ready-to-Eat": 0.6728,
+      "Spices & Seasonings": 0.4839,
+      "Vegetables": 0.5371
+    },
+    "best_val_macro_f1": 0.468189,
+    "best_epoch": 10,
+    "training_history": [
+      {
+        "epoch": 1,
+        "train_loss": 2.583822,
+        "val_loss": 2.461783,
+        "val_accuracy": 0.401823,
+        "val_macro_f1": 0.231176
+      },
+      {
+        "epoch": 2,
+        "train_loss": 2.423112,
+        "val_loss": 2.33841,
+        "val_accuracy": 0.440288,
+        "val_macro_f1": 0.301969
+      },
+      {
+        "epoch": 3,
+        "train_loss": 2.306504,
+        "val_loss": 2.212502,
+        "val_accuracy": 0.534704,
+        "val_macro_f1": 0.375382
+      },
+      {
+        "epoch": 4,
+        "train_loss": 2.213619,
+        "val_loss": 2.121325,
+        "val_accuracy": 0.551235,
+        "val_macro_f1": 0.386546
+      },
+      {
+        "epoch": 5,
+        "train_loss": 2.141312,
+        "val_loss": 2.062142,
+        "val_accuracy": 0.548903,
+        "val_macro_f1": 0.408002
+      },
+      {
+        "epoch": 6,
+        "train_loss": 2.081848,
+        "val_loss": 1.989136,
+        "val_accuracy": 0.560348,
+        "val_macro_f1": 0.424242
+      },
+      {
+        "epoch": 7,
+        "train_loss": 2.034915,
+        "val_loss": 1.925115,
+        "val_accuracy": 0.576031,
+        "val_macro_f1": 0.449234
+      },
+      {
+        "epoch": 8,
+        "train_loss": 1.989738,
+        "val_loss": 1.882146,
+        "val_accuracy": 0.573275,
+        "val_macro_f1": 0.441166
+      },
+      {
+        "epoch": 9,
+        "train_loss": 1.956376,
+        "val_loss": 1.836788,
+        "val_accuracy": 0.577408,
+        "val_macro_f1": 0.459643
+      },
+      {
+        "epoch": 10,
+        "train_loss": 1.929666,
+        "val_loss": 1.807408,
+        "val_accuracy": 0.575607,
+        "val_macro_f1": 0.468189
+      }
+    ],
+    "checkpoint": "checkpoints\\roberta-base_linear_probe_best.pt"
+  }
+}

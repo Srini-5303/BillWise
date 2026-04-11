@@ -3,3 +3,9 @@ billwise/
 __pycache__/
 *.pyc
 *.pyo
+Capstone_Project.venv/
+addn/
+.claude/
+__MACOSX/
+.vscode/
+data/

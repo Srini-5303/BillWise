@@ -1,0 +1,153 @@
+{
+  "model": "distilbert-base-uncased",
+  "method": "lora_weighted",
+  "test_accuracy": 0.855903,
+  "test_macro_f1": 0.846155,
+  "per_class_f1": {
+    "Bakery & Flour": 0.8692,
+    "Beverages": 0.8941,
+    "Dairy": 0.884,
+    "Frozen / Processed": 0.7349,
+    "Fruits": 0.8418,
+    "Grains & Staples": 0.8396,
+    "Herbs": 0.7746,
+    "Meat": 0.8713,
+    "Oils & Fats": 0.868,
+    "Poultry": 0.8357,
+    "Pulses & Beans": 0.8035,
+    "Sauces & Condiments": 0.8751,
+    "Seafood": 0.8917,
+    "Snacks & Ready-to-Eat": 0.8807,
+    "Spices & Seasonings": 0.8294,
+    "Vegetables": 0.8448
+  },
+  "best_val_macro_f1": 0.844108,
+  "best_epoch": 15,
+  "class_weights": {
+    "Bakery & Flour": 0.796672,
+    "Beverages": 0.796672,
+    "Dairy": 0.796672,
+    "Frozen / Processed": 0.796672,
+    "Fruits": 0.796672,
+    "Grains & Staples": 0.896144,
+    "Herbs": 2.379901,
+    "Meat": 0.796672,
+    "Oils & Fats": 2.206084,
+    "Poultry": 2.365767,
+    "Pulses & Beans": 2.584499,
+    "Sauces & Condiments": 0.796672,
+    "Seafood": 1.541324,
+    "Snacks & Ready-to-Eat": 0.796672,
+    "Spices & Seasonings": 0.796672,
+    "Vegetables": 0.796672
+  },
+  "training_history": [
+    {
+      "epoch": 1,
+      "train_loss": 1.277464,
+      "val_loss": 0.748049,
+      "val_accuracy": 0.755096,
+      "val_macro_f1": 0.743402
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.701832,
+      "val_loss": 0.608045,
+      "val_accuracy": 0.796601,
+      "val_macro_f1": 0.785349
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.583961,
+      "val_loss": 0.547899,
+      "val_accuracy": 0.814231,
+      "val_macro_f1": 0.799889
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.519073,
+      "val_loss": 0.520428,
+      "val_accuracy": 0.822701,
+      "val_macro_f1": 0.8117
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.469888,
+      "val_loss": 0.514234,
+      "val_accuracy": 0.82376,
+      "val_macro_f1": 0.812265
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.437794,
+      "val_loss": 0.469821,
+      "val_accuracy": 0.837472,
+      "val_macro_f1": 0.825595
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.407519,
+      "val_loss": 0.470209,
+      "val_accuracy": 0.841072,
+      "val_macro_f1": 0.829844
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.381541,
+      "val_loss": 0.456788,
+      "val_accuracy": 0.843136,
+      "val_macro_f1": 0.83171
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.361411,
+      "val_loss": 0.444476,
+      "val_accuracy": 0.848007,
+      "val_macro_f1": 0.837789
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.343608,
+      "val_loss": 0.429771,
+      "val_accuracy": 0.852507,
+      "val_macro_f1": 0.841429
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.329904,
+      "val_loss": 0.434728,
+      "val_accuracy": 0.851766,
+      "val_macro_f1": 0.840397
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.315588,
+      "val_loss": 0.430897,
+      "val_accuracy": 0.852771,
+      "val_macro_f1": 0.841275
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.305738,
+      "val_loss": 0.426582,
+      "val_accuracy": 0.854995,
+      "val_macro_f1": 0.843559
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.297359,
+      "val_loss": 0.428379,
+      "val_accuracy": 0.85293,
+      "val_macro_f1": 0.842315
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.289833,
+      "val_loss": 0.427569,
+      "val_accuracy": 0.854413,
+      "val_macro_f1": 0.844108
+    }
+  ],
+  "adapter_dir": "checkpoints\\lora_distilbert_weighted_adapter",
+  "merged_checkpoint": "checkpoints\\lora_distilbert_weighted_merged.pt"
+}
