@@ -79,7 +79,7 @@ def extract_items(text):
     Extract purchased line items from receipt text.
     Looks for lines that have a description followed by a price,
     skips totals, taxes, subtotals, and other non-item lines.
-    Returns a semicolon-separated string of item names.
+    Returns a list of (item_name, item_price) tuples.
     """
     lines = [l.strip() for l in text.split("\n") if l.strip()]
 
@@ -98,7 +98,8 @@ def extract_items(text):
         upper = line.upper()
 
         # Must contain a price to be a line item
-        if not re.search(money_pattern, line):
+        price_match = re.search(money_pattern, line)
+        if not price_match:
             continue
 
         # Skip known non-item lines
@@ -110,9 +111,9 @@ def extract_items(text):
         if len(name) < 2:
             continue
 
-        items.append(name)
+        items.append((name, price_match.group(0)))
 
-    return "; ".join(items) if items else "Not found"
+    return items if items else []
 
 
 def extract_total_from_text(text):

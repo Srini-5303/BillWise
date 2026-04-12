@@ -9,8 +9,12 @@ from twilio.twiml.messaging_response import MessagingResponse
 from ocr_pipeline import process_image
 from csv_writer import append_bill, is_duplicate
 from chatbot import handle_chat_message, reload_session, clear_session
+import categorizer
 
 app = Flask(__name__)
+
+# Load DistilBERT model once at startup
+categorizer.init()
 
 ACCOUNT_SID   = os.environ["TWILIO_ACCOUNT_SID"]
 AUTH_TOKEN    = os.environ["TWILIO_AUTH_TOKEN"]
@@ -121,6 +125,12 @@ def webhook():
                 )
                 continue
 
+            # ── Categorize each item ──
+            categorized_items = [
+                (name, price, categorizer.categorize(name))
+                for name, price in result["items"]
+            ]
+
             # ── Save to CSV ──
             serial = append_bill(
                 filename   = os.path.basename(img_path),
@@ -130,7 +140,7 @@ def webhook():
                 card       = result["card"],
                 sender     = sender,
                 image_hash = image_hash,
-                items      = result["items"],
+                items      = categorized_items,
             )
 
             # Reload cached CSV for this sender so next query sees new bill

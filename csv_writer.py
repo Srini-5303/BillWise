@@ -7,9 +7,10 @@ from google.cloud import storage
 
 
 BUCKET_NAME = os.environ["GCS_BUCKET_NAME"]
-CSV_BLOB    = "bills_output.csv"
+CSV_BLOB    = os.environ.get("GCS_BILLS_BLOB", "bills_output.csv")
 HEADERS     = ["Serial_No", "Bill_File", "Store_Name", "Invoice_Date",
-               "Total", "Card_Used", "Received_At", "Sender", "Image_Hash", "Items"]
+               "Total", "Card_Used", "Received_At", "Sender", "Image_Hash",
+               "Item_Name", "Item_Price", "Grocery_Category"]
 
 _lock       = threading.Lock()
 _gcs_client = storage.Client()
@@ -26,7 +27,7 @@ def _read_rows() -> list[list]:
 
     if not blob.exists():
         return []
-    
+
     content = blob.download_as_text(encoding="utf-8")
     reader  = csv.reader(io.StringIO(content))
     rows    = list(reader)
@@ -83,7 +84,7 @@ def is_duplicate(image_hash: str, store: str, date: str, total: str):
 
     Returns (True, matching_row) if duplicate, else (False, None).
     Col indices: 0=Serial, 1=File, 2=Store, 3=Date, 4=Total, 5=Card,
-                 6=ReceivedAt, 7=Sender, 8=Hash
+                 6=ReceivedAt, 7=Sender, 8=Hash, 9=Item_Name, 10=Item_Price, 11=Category
     """
     rows = _read_rows()
 
@@ -113,17 +114,51 @@ def is_duplicate(image_hash: str, store: str, date: str, total: str):
 
 
 def append_bill(filename, store, date, total, card, sender, image_hash, items) -> int:
-    """Thread-safe append of one bill row to GCS CSV. Returns serial number."""
+    """
+    Thread-safe append of one bill to GCS CSV.
+    Writes one row per item. items is a list of (item_name, item_price, grocery_category) tuples.
+    Returns the bill's serial number.
+    """
+    if not items:
+        items = [("Unknown", "", "")]
+
     with _lock:
-        existing    = _read_rows()
-        serial      = len(existing) + 1
-        received    = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
-        new_row     = [serial, filename, store,
-                       date  or "Not found",
-                       total or "Not found",
-                       card, received, sender, image_hash,
-                       items or "Not found"]
-        existing.append(new_row)
+        existing = _read_rows()
+
+        # Serial is bill-level — find max existing serial rather than row count
+        if existing:
+            try:
+                serial = max(int(row[0]) for row in existing if row) + 1
+            except (ValueError, IndexError):
+                serial = len(existing) + 1
+        else:
+            serial = 1
+
+        received = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+
+        for item_name, item_price, item_category in items:
+            new_row = [
+                serial,
+                filename,
+                store or "Not found",
+                date  or "Not found",
+                total or "Not found",
+                card,
+                received,
+                sender,
+                image_hash,
+                item_name,
+                item_price,
+                item_category,
+            ]
+            existing.append(new_row)
+
         _write_rows(existing)
-        
+
     return serial
+
+
+def reset_csv():
+    """Overwrite GCS CSV with just the headers (wipes all data)."""
+    with _lock:
+        _write_rows([])
