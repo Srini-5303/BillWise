@@ -1,0 +1,134 @@
+{
+  "model": "roberta-base",
+  "method": "linear_probe",
+  "test_accuracy": 0.630334,
+  "test_macro_f1": 0.606198,
+  "per_class_f1": {
+    "Bakery & Flour": 0.6151,
+    "Beverages": 0.7112,
+    "Dairy": 0.6768,
+    "Frozen / Processed": 0.4644,
+    "Fruits": 0.6115,
+    "Grains & Staples": 0.5982,
+    "Herbs": 0.4416,
+    "Meat": 0.5744,
+    "Oils & Fats": 0.7061,
+    "Poultry": 0.498,
+    "Pulses & Beans": 0.5495,
+    "Sauces & Condiments": 0.696,
+    "Seafood": 0.6895,
+    "Snacks & Ready-to-Eat": 0.6896,
+    "Spices & Seasonings": 0.5724,
+    "Vegetables": 0.6051
+  },
+  "best_val_macro_f1": 0.608909,
+  "best_epoch": 12,
+  "training_history": [
+    {
+      "epoch": 1,
+      "train_loss": 2.433711,
+      "val_loss": 2.17956,
+      "val_accuracy": 0.52422,
+      "val_macro_f1": 0.394325
+    },
+    {
+      "epoch": 2,
+      "train_loss": 2.123212,
+      "val_loss": 1.964393,
+      "val_accuracy": 0.550161,
+      "val_macro_f1": 0.448529
+    },
+    {
+      "epoch": 3,
+      "train_loss": 1.973371,
+      "val_loss": 1.803157,
+      "val_accuracy": 0.583461,
+      "val_macro_f1": 0.515008
+    },
+    {
+      "epoch": 4,
+      "train_loss": 1.892592,
+      "val_loss": 1.692563,
+      "val_accuracy": 0.608608,
+      "val_macro_f1": 0.542864
+    },
+    {
+      "epoch": 5,
+      "train_loss": 1.843206,
+      "val_loss": 1.642429,
+      "val_accuracy": 0.612102,
+      "val_macro_f1": 0.563807
+    },
+    {
+      "epoch": 6,
+      "train_loss": 1.803928,
+      "val_loss": 1.604978,
+      "val_accuracy": 0.606438,
+      "val_macro_f1": 0.559424
+    },
+    {
+      "epoch": 7,
+      "train_loss": 1.773251,
+      "val_loss": 1.562337,
+      "val_accuracy": 0.622161,
+      "val_macro_f1": 0.572301
+    },
+    {
+      "epoch": 8,
+      "train_loss": 1.758707,
+      "val_loss": 1.555704,
+      "val_accuracy": 0.608079,
+      "val_macro_f1": 0.574751
+    },
+    {
+      "epoch": 9,
+      "train_loss": 1.741036,
+      "val_loss": 1.502302,
+      "val_accuracy": 0.634867,
+      "val_macro_f1": 0.593397
+    },
+    {
+      "epoch": 10,
+      "train_loss": 1.726224,
+      "val_loss": 1.494115,
+      "val_accuracy": 0.635132,
+      "val_macro_f1": 0.598662
+    },
+    {
+      "epoch": 11,
+      "train_loss": 1.724495,
+      "val_loss": 1.512454,
+      "val_accuracy": 0.615173,
+      "val_macro_f1": 0.593789
+    },
+    {
+      "epoch": 12,
+      "train_loss": 1.710975,
+      "val_loss": 1.472163,
+      "val_accuracy": 0.63402,
+      "val_macro_f1": 0.608909
+    },
+    {
+      "epoch": 13,
+      "train_loss": 1.709827,
+      "val_loss": 1.482228,
+      "val_accuracy": 0.62269,
+      "val_macro_f1": 0.603486
+    },
+    {
+      "epoch": 14,
+      "train_loss": 1.702414,
+      "val_loss": 1.457206,
+      "val_accuracy": 0.634232,
+      "val_macro_f1": 0.605431
+    },
+    {
+      "epoch": 15,
+      "train_loss": 1.693545,
+      "val_loss": 1.484362,
+      "val_accuracy": 0.611467,
+      "val_macro_f1": 0.588226
+    }
+  ],
+  "checkpoint": "checkpoints\\linear_probe_roberta_best.pt"
+}

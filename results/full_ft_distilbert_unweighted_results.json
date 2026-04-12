@@ -1,0 +1,115 @@
+{
+  "model": "distilbert-base-uncased",
+  "method": "full_finetune_unweighted",
+  "test_accuracy": 0.87189,
+  "test_macro_f1": 0.865589,
+  "per_class_f1": {
+    "Bakery & Flour": 0.8755,
+    "Beverages": 0.9123,
+    "Dairy": 0.8988,
+    "Frozen / Processed": 0.7475,
+    "Fruits": 0.855,
+    "Grains & Staples": 0.8639,
+    "Herbs": 0.8213,
+    "Meat": 0.8763,
+    "Oils & Fats": 0.9017,
+    "Poultry": 0.8371,
+    "Pulses & Beans": 0.8548,
+    "Sauces & Condiments": 0.888,
+    "Seafood": 0.911,
+    "Snacks & Ready-to-Eat": 0.8929,
+    "Spices & Seasonings": 0.8456,
+    "Vegetables": 0.8677
+  },
+  "best_val_macro_f1": 0.866808,
+  "best_epoch": 9,
+  "lr_lower": 1e-05,
+  "lr_upper": 3e-05,
+  "training_history": [
+    {
+      "epoch": 1,
+      "train_loss": 1.190575,
+      "val_loss": 0.599716,
+      "val_accuracy": 0.811848,
+      "val_macro_f1": 0.807322
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.495051,
+      "val_loss": 0.431593,
+      "val_accuracy": 0.860236,
+      "val_macro_f1": 0.853515
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.358991,
+      "val_loss": 0.451502,
+      "val_accuracy": 0.857748,
+      "val_macro_f1": 0.852155
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.275035,
+      "val_loss": 0.403813,
+      "val_accuracy": 0.872095,
+      "val_macro_f1": 0.865952
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.21214,
+      "val_loss": 0.439752,
+      "val_accuracy": 0.869077,
+      "val_macro_f1": 0.865203
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.166662,
+      "val_loss": 0.458533,
+      "val_accuracy": 0.871618,
+      "val_macro_f1": 0.865766
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.13363,
+      "val_loss": 0.471394,
+      "val_accuracy": 0.872201,
+      "val_macro_f1": 0.866191
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.107735,
+      "val_loss": 0.517966,
+      "val_accuracy": 0.869924,
+      "val_macro_f1": 0.863351
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.087288,
+      "val_loss": 0.524242,
+      "val_accuracy": 0.873101,
+      "val_macro_f1": 0.866808
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.072223,
+      "val_loss": 0.551982,
+      "val_accuracy": 0.869765,
+      "val_macro_f1": 0.865523
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.05873,
+      "val_loss": 0.589988,
+      "val_accuracy": 0.870136,
+      "val_macro_f1": 0.866039
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.048539,
+      "val_loss": 0.605896,
+      "val_accuracy": 0.870454,
+      "val_macro_f1": 0.866027
+    }
+  ],
+  "checkpoint": "checkpoints\\full_ft_distilbert_unweighted_best.pt"
+}

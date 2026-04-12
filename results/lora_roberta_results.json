@@ -1,0 +1,135 @@
+{
+  "model": "roberta-base",
+  "method": "lora",
+  "test_accuracy": 0.852515,
+  "test_macro_f1": 0.84778,
+  "per_class_f1": {
+    "Bakery & Flour": 0.8573,
+    "Beverages": 0.8936,
+    "Dairy": 0.8678,
+    "Frozen / Processed": 0.7342,
+    "Fruits": 0.8347,
+    "Grains & Staples": 0.8366,
+    "Herbs": 0.8378,
+    "Meat": 0.8679,
+    "Oils & Fats": 0.8886,
+    "Poultry": 0.8322,
+    "Pulses & Beans": 0.8097,
+    "Sauces & Condiments": 0.8793,
+    "Seafood": 0.8872,
+    "Snacks & Ready-to-Eat": 0.8712,
+    "Spices & Seasonings": 0.8229,
+    "Vegetables": 0.8433
+  },
+  "best_val_macro_f1": 0.847626,
+  "best_epoch": 13,
+  "training_history": [
+    {
+      "epoch": 1,
+      "train_loss": 1.247069,
+      "val_loss": 0.747361,
+      "val_accuracy": 0.770131,
+      "val_macro_f1": 0.760646
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.783197,
+      "val_loss": 0.640041,
+      "val_accuracy": 0.803007,
+      "val_macro_f1": 0.796535
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.687499,
+      "val_loss": 0.590583,
+      "val_accuracy": 0.811742,
+      "val_macro_f1": 0.806988
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.625876,
+      "val_loss": 0.542598,
+      "val_accuracy": 0.82503,
+      "val_macro_f1": 0.819212
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.588499,
+      "val_loss": 0.533379,
+      "val_accuracy": 0.827572,
+      "val_macro_f1": 0.822777
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.555289,
+      "val_loss": 0.538985,
+      "val_accuracy": 0.831595,
+      "val_macro_f1": 0.827137
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.529235,
+      "val_loss": 0.482708,
+      "val_accuracy": 0.84213,
+      "val_macro_f1": 0.834202
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.505943,
+      "val_loss": 0.508981,
+      "val_accuracy": 0.837207,
+      "val_macro_f1": 0.831404
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.489693,
+      "val_loss": 0.485838,
+      "val_accuracy": 0.843348,
+      "val_macro_f1": 0.837598
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.47422,
+      "val_loss": 0.471276,
+      "val_accuracy": 0.847689,
+      "val_macro_f1": 0.840824
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.460358,
+      "val_loss": 0.478672,
+      "val_accuracy": 0.845042,
+      "val_macro_f1": 0.839736
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.449994,
+      "val_loss": 0.462722,
+      "val_accuracy": 0.850336,
+      "val_macro_f1": 0.844426
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.439808,
+      "val_loss": 0.455561,
+      "val_accuracy": 0.853142,
+      "val_macro_f1": 0.847626
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.430471,
+      "val_loss": 0.460182,
+      "val_accuracy": 0.852983,
+      "val_macro_f1": 0.846961
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.4204,
+      "val_loss": 0.457244,
+      "val_accuracy": 0.853036,
+      "val_macro_f1": 0.847304
+    }
+  ],
+  "adapter_dir": "checkpoints\\lora_roberta_adapter",
+  "merged_checkpoint": "checkpoints\\lora_roberta_merged.pt"
+}

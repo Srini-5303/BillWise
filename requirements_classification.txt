@@ -1,0 +1,12 @@
+# ── Inference (Abbreviation_Normalization.py + Categorization.py) ────────────
+anthropic>=0.40.0
+rapidfuzz>=3.0.0
+scikit-learn>=1.0.0
+pandas>=2.0.0
+torch>=2.0.0
+transformers>=4.40.0
+
+# ── Training (Categorization_DataPrepTrain Final.ipynb) ───────────────────────
+peft>=0.10.0          # LoRA fine-tuning
+matplotlib>=3.7.0
+seaborn>=0.13.0
