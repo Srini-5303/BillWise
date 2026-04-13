@@ -124,6 +124,13 @@ def categorize(item_name: str) -> str:
             None, None, None,   # inventory/vectorizer/tfidf_matrix unused in run_inference
             CONFIG,
         )
+        logging.getLogger("categorizer").info(
+            "%-40s → %-25s (confidence=%.4f, routing=%s)",
+            repr(item_name),
+            result["predicted_label"],
+            result["confidence"],
+            result["routing"],
+        )
         return result["predicted_label"]
     except Exception as e:
         logging.error(f"Categorizer: error on '{item_name}' — {e}")

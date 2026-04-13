@@ -1,9 +1,12 @@
 import csv
 import io
 import os
+import logging
 import threading
 from datetime import datetime
 from google.cloud import storage
+
+log = logging.getLogger("csv_writer")
 
 
 BUCKET_NAME = os.environ["GCS_BUCKET_NAME"]
@@ -154,6 +157,8 @@ def append_bill(filename, store, date, total, card, sender, image_hash, items) -
             existing.append(new_row)
 
         _write_rows(existing)
+        log.info("Bill #%d written — store=%r | date=%s | total=%s | %d item rows → GCS",
+                 serial, store, date, total, len(items))
 
     return serial
 

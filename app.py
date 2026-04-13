@@ -3,6 +3,7 @@ sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 
 import os
+import logging
 import hashlib
 import tempfile
 import requests
@@ -14,6 +15,14 @@ from ocr_pipeline import process_image
 from csv_writer import append_bill, is_duplicate
 from chatbot import handle_chat_message, reload_session, clear_session
 import categorizer
+
+# ── Logging configuration ─────────────────────────────────────────────────────
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s — %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+log = logging.getLogger("app")
 
 app = Flask(__name__)
 
@@ -72,13 +81,18 @@ def webhook():
     sender    = request.form.get("From", "unknown")
     resp      = MessagingResponse()
 
+    log.info("── Incoming SMS from %s | media=%d ──", sender, num_media)
+
     # ── Text-only message → route to chatbot ──────────────────────────────────
     if num_media == 0:
         text = request.form.get("Body", "").strip()
+        log.info("Text message: %r", text)
         if _is_question(text):
+            log.info("Routing to chatbot")
             answer = handle_chat_message(session_id=sender, message=text)
             resp.message(answer)
         else:
+            log.info("Not a question — returning help message")
             resp.message(
                 "👋 Hi! Send me a bill image to digitize it 🧾\n"
                 "Or ask a question about your spending — e.g. "
@@ -101,21 +115,37 @@ def webhook():
 
         img_path = None
         try:
+            # ── Step 1: Download image ────────────────────────────────────────
+            log.info("[%d/%d] Downloading image from Twilio...", i + 1, num_media)
             img_path, image_hash = download_image(media_url)
+            log.info("[%d/%d] Image downloaded — hash=%s", i + 1, num_media, image_hash)
 
-            # ── Layer 1: Check image hash before running OCR ──
+            # ── Step 2: Dedup Layer 1 — image hash ───────────────────────────
+            log.info("[%d/%d] Dedup Layer 1: checking image hash...", i + 1, num_media)
             dupe, match = is_duplicate(image_hash, "", "", "")
             if dupe:
+                log.warning("[%d/%d] Duplicate image hash — rejected (Bill #%s)", i + 1, num_media, match[0])
                 reply_parts.append(
                     f"⚠️ This bill has already been submitted.\n"
                     f"🧾 Original entry: Bill #{match[0]} | {match[2]} | {match[3]} | ${match[4]}"
                 )
                 continue
+            log.info("[%d/%d] Dedup Layer 1: passed", i + 1, num_media)
 
-            # ── Run OCR ──
+            # ── Step 3: OCR ───────────────────────────────────────────────────
+            log.info("[%d/%d] Running OCR...", i + 1, num_media)
             result = process_image(img_path)
+            log.info(
+                "[%d/%d] OCR result — store=%r | date=%r | total=%r | card=%r | items=%d",
+                i + 1, num_media,
+                result["store"], result["date"], result["total"],
+                result["card"], len(result["items"]),
+            )
+            for item_name, item_price in result["items"]:
+                log.info("    item: %r  price: %s", item_name, item_price)
 
-            # ── Layer 2: Check extracted fields after OCR ──
+            # ── Step 4: Dedup Layer 2 — content match ─────────────────────────
+            log.info("[%d/%d] Dedup Layer 2: checking content...", i + 1, num_media)
             dupe, match = is_duplicate(
                 image_hash,
                 result["store"],
@@ -123,19 +153,24 @@ def webhook():
                 result["total"]
             )
             if dupe:
+                log.warning("[%d/%d] Duplicate content — rejected (Bill #%s)", i + 1, num_media, match[0])
                 reply_parts.append(
                     f"⚠️ This bill has already been submitted.\n"
                     f"🧾 Original entry: Bill #{match[0]} | {match[2]} | {match[3]} | ${match[4]}"
                 )
                 continue
+            log.info("[%d/%d] Dedup Layer 2: passed", i + 1, num_media)
 
-            # ── Categorize each item ──
-            categorized_items = [
-                (name, price, categorizer.categorize(name))
-                for name, price in result["items"]
-            ]
+            # ── Step 5: Categorize each item ──────────────────────────────────
+            log.info("[%d/%d] Categorizing %d items...", i + 1, num_media, len(result["items"]))
+            categorized_items = []
+            for name, price in result["items"]:
+                category = categorizer.categorize(name)
+                log.info("    %r  →  %s  ($%s)", name, category or "(uncategorized)", price)
+                categorized_items.append((name, price, category))
 
-            # ── Save to CSV ──
+            # ── Step 6: Save to CSV ───────────────────────────────────────────
+            log.info("[%d/%d] Writing to GCS CSV...", i + 1, num_media)
             serial = append_bill(
                 filename   = os.path.basename(img_path),
                 store      = result["store"],
@@ -146,6 +181,7 @@ def webhook():
                 image_hash = image_hash,
                 items      = categorized_items,
             )
+            log.info("[%d/%d] Bill #%d saved — %d rows written to GCS", i + 1, num_media, serial, len(categorized_items))
 
             # Reload cached CSV for this sender so next query sees new bill
             reload_session(sender)
@@ -159,6 +195,7 @@ def webhook():
             )
 
         except Exception as e:
+            log.exception("Error processing image %d: %s", i + 1, e)
             reply_parts.append(f"❌ Could not process image {i+1}: {str(e)}")
 
         finally:

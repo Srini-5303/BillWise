@@ -1,7 +1,9 @@
 import re
+import logging
 from datetime import datetime
 from google.cloud import vision
 
+log    = logging.getLogger("ocr_pipeline")
 client = vision.ImageAnnotatorClient()
 
 def extract_text(path):
@@ -143,12 +145,24 @@ def process_image(path):
     Master function — runs full pipeline on a single image.
     Returns a dict of extracted fields.
     """
+    log.info("Calling Google Cloud Vision OCR on %s", path)
     text  = extract_text(path)
-    lines = text.split("\n")
+    log.info("OCR returned %d characters", len(text))
+
+    lines  = text.split("\n")
+    store  = detect_store(lines)
+    date   = extract_date(text)
+    total  = extract_total_from_text(text)
+    card   = extract_card_last4(text)
+    items  = extract_items(text)
+
+    log.info("Extracted — store=%r | date=%r | total=%r | card=%r | items=%d",
+             store, date, total, card, len(items))
+
     return {
-        "store" : detect_store(lines),
-        "date"  : extract_date(text),
-        "total" : extract_total_from_text(text),
-        "card"  : extract_card_last4(text),
-        "items" : extract_items(text),
+        "store" : store,
+        "date"  : date,
+        "total" : total,
+        "card"  : card,
+        "items" : items,
     }
