@@ -1,0 +1,20 @@
+billwise/
+__pycache__/
+*.pyc
+*.pyo
+.git/
+.gitignore
+.gitattributes
+raw_images/
+logs/
+addn/
+env.yaml
+*.md
+results/
+src/Categorization_DataPrepTrain Final.ipynb
+data/Processed_Datasets/Splits/
+data/Processed_Datasets/Labeled/Labeled_Data.csv
+data/Processed_Datasets/Labeled/split_1_labeled.csv
+data/Processed_Datasets/Labeled/split_4_labeled.csv
+reset_csv.py
+vision_test.py

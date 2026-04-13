@@ -9,3 +9,7 @@ addn/
 __MACOSX/
 .vscode/
 data/
+receipts&labels/
+raw_images/
+logs/
+*.log

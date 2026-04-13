@@ -76,6 +76,68 @@ def detect_store(lines):
     return "UNKNOWN"
 
 
+def extract_time(text):
+    patterns = [
+        r"\b\d{1,2}:\d{2}:\d{2}\s*(?:AM|PM)\b",
+        r"\b\d{1,2}:\d{2}\s*(?:AM|PM)\b",
+        r"\b\d{1,2}:\d{2}:\d{2}\b",
+    ]
+    for pattern in patterns:
+        m = re.search(pattern, text, re.IGNORECASE)
+        if m:
+            return m.group().strip()
+    return ""
+
+
+def extract_subtotal(text):
+    lines = [l.strip().upper() for l in text.split("\n") if l.strip()]
+    money_pattern = r"\d[\d,]*\.\d{2}"
+    for line in lines:
+        if "SUBTOTAL" in line or "SUB TOTAL" in line or "SUB-TOTAL" in line:
+            m = re.search(money_pattern, line)
+            if m:
+                try:
+                    return round(float(m.group().replace(",", "")), 2)
+                except ValueError:
+                    pass
+    return ""
+
+
+def extract_tax(text):
+    lines = [l.strip().upper() for l in text.split("\n") if l.strip()]
+    money_pattern = r"\d[\d,]*\.\d{2}"
+    for line in lines:
+        if re.search(r"\bTAX\b", line) and "SUBTOTAL" not in line and "TOTAL" not in line:
+            m = re.search(money_pattern, line)
+            if m:
+                try:
+                    return round(float(m.group().replace(",", "")), 2)
+                except ValueError:
+                    pass
+    return ""
+
+
+def extract_payment_method(text):
+    upper = text.upper()
+    for keyword in ["VISA", "MASTERCARD", "MASTER CARD", "AMEX",
+                    "AMERICAN EXPRESS", "DISCOVER", "DEBIT", "CREDIT", "CASH"]:
+        if keyword in upper:
+            return keyword.replace(" ", "_")
+    return ""
+
+
+def extract_receipt_number(text):
+    patterns = [
+        r"(?:RECEIPT|TRANS(?:ACTION)?|REF(?:ERENCE)?|ORDER|CHECK|TICKET)\s*[#:No.]*\s*([A-Z0-9\-]{4,})",
+        r"(?:RECEIPT\s*(?:NO|NUMBER|#))\s*[:\-]?\s*([A-Z0-9\-]{4,})",
+    ]
+    for pattern in patterns:
+        m = re.search(pattern, text, re.IGNORECASE)
+        if m:
+            return m.group(1).strip()
+    return ""
+
+
 def extract_items(text):
     """
     Extract purchased line items from receipt text.
@@ -131,7 +193,7 @@ def extract_total_from_text(text):
             value = float(m)
             if 0 < value < 20000:
                 amounts.append(value)
-                if any(k in line for k in ["TOTAL", "AMOUNT", "BALANCE", "DUE"]):
+                if any(k in line for k in ["TOTAL", "AMOUNT", "BALANCE", "DUE", "Purchase"]):
                     keyword_amounts.append(value)
 
     if keyword_amounts:
@@ -149,20 +211,30 @@ def process_image(path):
     text  = extract_text(path)
     log.info("OCR returned %d characters", len(text))
 
-    lines  = text.split("\n")
-    store  = detect_store(lines)
-    date   = extract_date(text)
-    total  = extract_total_from_text(text)
-    card   = extract_card_last4(text)
-    items  = extract_items(text)
+    lines          = text.split("\n")
+    store          = detect_store(lines)
+    date           = extract_date(text)
+    time           = extract_time(text)
+    subtotal       = extract_subtotal(text)
+    tax            = extract_tax(text)
+    total          = extract_total_from_text(text)
+    card           = extract_card_last4(text)
+    payment_method = extract_payment_method(text)
+    receipt_number = extract_receipt_number(text)
+    items          = extract_items(text)
 
     log.info("Extracted — store=%r | date=%r | total=%r | card=%r | items=%d",
              store, date, total, card, len(items))
 
     return {
-        "store" : store,
-        "date"  : date,
-        "total" : total,
-        "card"  : card,
-        "items" : items,
+        "store"          : store,
+        "date"           : date,
+        "time"           : time,
+        "subtotal"       : subtotal,
+        "tax"            : tax,
+        "total"          : total,
+        "card"           : card,
+        "payment_method" : payment_method,
+        "receipt_number" : receipt_number,
+        "items"          : items,
     }
