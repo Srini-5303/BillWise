@@ -1,0 +1,52 @@
+{
+  "receipt_id": "target-4",
+  "image_file": "target-4.jpg",
+  "fields": {
+    "merchant_name": "TARGET",
+    "date": null,
+    "time": null,
+    "subtotal": 28.72,
+    "tax": 1.60,
+    "total": 28.88,
+    "payment_method": "card",
+    "card_last4": "4065",
+    "receipt_number": null
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "name": "ZIPLOC",
+      "quantity": 2,
+      "unit_price": 2.84,
+      "item_total": 5.68
+    },
+    {
+      "line_id": 2,
+      "name": "PHOTO ALBUM",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.00
+    },
+    {
+      "line_id": 3,
+      "name": "GLADE",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.99
+    },
+    {
+      "line_id": 4,
+      "name": "GLADE PISO",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.89
+    }
+  ],
+  "evaluation_metadata": {
+    "currency": "USD",
+    "visible_payment_info": true,
+    "has_discounts_or_coupons": true,
+    "quality": "moderate",
+    "notes": "Date and time are not visible in the cropped image. Extensive coupon deductions applied to the subtotal. Item names extracted exactly as printed."
+  }
+}

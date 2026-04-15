@@ -1,0 +1,31 @@
+{
+  "receipt_id": "target-3",
+  "image_file": "target-3.jpg",
+  "fields": {
+    "merchant_name": "TARGET",
+    "date": "2021-07-25",
+    "time": "07:34 PM",
+    "subtotal": 169.99,
+    "tax": 9.69,
+    "total": 171.18,
+    "payment_method": "card",
+    "card_last4": "9996",
+    "receipt_number": null
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "name": "TRA TITAN",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 169.99
+    }
+  ],
+  "evaluation_metadata": {
+    "currency": "USD",
+    "visible_payment_info": true,
+    "has_discounts_or_coupons": true,
+    "quality": "clean",
+    "notes": "Payment made via Target Credit card. RedCard Savings of $8.50 applied."
+  }
+}

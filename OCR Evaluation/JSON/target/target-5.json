@@ -1,0 +1,52 @@
+{
+  "receipt_id": "target-5",
+  "image_file": "target-5.jpg",
+  "fields": {
+    "merchant_name": "TARGET",
+    "date": "2025-08-27",
+    "time": "10:02 AM",
+    "subtotal": 16.96,
+    "tax": 1.61,
+    "total": 18.57,
+    "payment_method": "card",
+    "card_last4": "4958",
+    "receipt_number": "2-5239-1952-0141-4292-1"
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "name": "FILE FOLDER",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.49
+    },
+    {
+      "line_id": 2,
+      "name": "MAIL ENV AND",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.49
+    },
+    {
+      "line_id": 3,
+      "name": "GEL PEN",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.49
+    },
+    {
+      "line_id": 4,
+      "name": "3CT PILOT",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.49
+    }
+  ],
+  "evaluation_metadata": {
+    "currency": "USD",
+    "visible_payment_info": true,
+    "has_discounts_or_coupons": false,
+    "quality": "clean",
+    "notes": "Merchant name inferred from logo and store location header. Payment method listed as Debit."
+  }
+}

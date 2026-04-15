@@ -1,0 +1,108 @@
+{
+  "receipt_id": "target-6",
+  "image_file": "target-6.jpg",
+  "fields": {
+    "merchant_name": "TARGET",
+    "date": "2014-02-21",
+    "time": "04:18 PM",
+    "subtotal": 94.29,
+    "tax": 6.36,
+    "total": 100.65,
+    "payment_method": "card",
+    "card_last4": "7453",
+    "receipt_number": "4052-1892-0079-1179-1"
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "name": "PARTS MULTI",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.99
+    },
+    {
+      "line_id": 2,
+      "name": "EARRING SET",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 7.99
+    },
+    {
+      "line_id": 3,
+      "name": "NEUTROGENA",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.94
+    },
+    {
+      "line_id": 4,
+      "name": "NEUTROGENA",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.49
+    },
+    {
+      "line_id": 5,
+      "name": "DOVE",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.89
+    },
+    {
+      "line_id": 6,
+      "name": "COLGAT MOUTH",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 7,
+      "name": "COLGAT TOOTH",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.99
+    },
+    {
+      "line_id": 8,
+      "name": "COLGAT MANUA",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 9.99
+    },
+    {
+      "line_id": 9,
+      "name": "CREST",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 39.99
+    },
+    {
+      "line_id": 10,
+      "name": "PLACKE FLOSS",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.79
+    },
+    {
+      "line_id": 11,
+      "name": "GOODY HAIR A",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 6.00
+    },
+    {
+      "line_id": 12,
+      "name": "UP ISOPROPL",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.24
+    }
+  ],
+  "evaluation_metadata": {
+    "currency": "USD",
+    "visible_payment_info": true,
+    "has_discounts_or_coupons": true,
+    "quality": "clean",
+    "notes": "Payment made via Debit. Subtotal and total match the sum of items and tax. Receipt number extracted from the bottom reference line."
+  }
+}

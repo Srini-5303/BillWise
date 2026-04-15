@@ -1,0 +1,80 @@
+{
+  "receipt_id": "target-2",
+  "image_file": "target-2.jpg",
+  "fields": {
+    "merchant_name": "TARGET",
+    "date": "2021-02-01",
+    "time": "11:24 AM",
+    "subtotal": 96.60,
+    "tax": 9.27,
+    "total": 101.04,
+    "payment_method": "card",
+    "card_last4": "6225",
+    "receipt_number": null
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "name": "Everspring",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.79
+    },
+    {
+      "line_id": 2,
+      "name": "Command",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 11.99
+    },
+    {
+      "line_id": 3,
+      "name": "Bright Box",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.99
+    },
+    {
+      "line_id": 4,
+      "name": "DAWN",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 10.89
+    },
+    {
+      "line_id": 5,
+      "name": "UTILITY TUB",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 10.99
+    },
+    {
+      "line_id": 6,
+      "name": "UTILITY TUB",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 10.99
+    },
+    {
+      "line_id": 7,
+      "name": "UTILITY TUB",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 10.99
+    },
+    {
+      "line_id": 8,
+      "name": "UTILITY TUB",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 10.99
+    }
+  ],
+  "evaluation_metadata": {
+    "currency": "USD",
+    "visible_payment_info": true,
+    "has_discounts_or_coupons": true,
+    "quality": "clean",
+    "notes": "RedCard Savings of $4.83 applied before tax. Payment made via Target Debit Card."
+  }
+}

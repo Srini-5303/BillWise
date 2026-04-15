@@ -1,0 +1,115 @@
+{
+  "receipt_id": "traderjoes-80",
+  "image_file": "traderjoes-8.jpg",
+  "fields": {
+    "merchant_name": "TRADER JOE'S",
+    "date": null,
+    "time": null,
+    "subtotal": null,
+    "tax": null,
+    "total": 46.60,
+    "payment_method": "card",
+    "card_last4": null,
+    "receipt_number": null
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "name": "YOGURT GREEK PLAIN LOW F",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.29
+    },
+    {
+      "line_id": 2,
+      "name": "YOGURT GREEK PLAIN LOW F",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.29
+    },
+    {
+      "line_id": 3,
+      "name": "POUND PLUS BITTERSWEET A",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 5.99
+    },
+    {
+      "line_id": 4,
+      "name": "NUTRITIONAL YEAST",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 5,
+      "name": "NUTRITIONAL YEAST",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 6,
+      "name": "GIANT PERUVIAN INCA CORN",
+      "quantity": 3,
+      "unit_price": 1.99,
+      "item_total": 5.97
+    },
+    {
+      "line_id": 7,
+      "name": "SLICED LITE JARLSBERG",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.99
+    },
+    {
+      "line_id": 8,
+      "name": "A-GARLIC EACH",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 0.49
+    },
+    {
+      "line_id": 9,
+      "name": "BLUEBERRIES ORG 18 OZ",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 7.99
+    },
+    {
+      "line_id": 10,
+      "name": "TOMATOES GRAPE MINI PEAR",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 11,
+      "name": "CUCUMBERS HOTHOUSE EACH",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.69
+    },
+    {
+      "line_id": 12,
+      "name": "MILK QUART WHOLE",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.69
+    },
+    {
+      "line_id": 13,
+      "name": "SALAD ARUGULA WILD 7 OZ",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.29
+    }
+  ],
+  "evaluation_metadata": {
+    "currency": "USD",
+    "visible_payment_info": true,
+    "has_discounts_or_coupons": true,
+    "quality": "clean",
+    "notes": "Payment made via AMEX. 'REUSABLE BAG CREDIT' of -$0.05 excluded from items list as it is a credit/saving. Subtotal inferred from sum of items and credit before any unlisted tax."
+  }
+}

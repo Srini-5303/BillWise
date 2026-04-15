@@ -1,0 +1,87 @@
+{
+  "receipt_id": "target-10",
+  "image_file": "target-10.jpg",
+  "fields": {
+    "merchant_name": null,
+    "date": "2024-02-03",
+    "time": "03:45 PM",
+    "subtotal": 192.50,
+    "tax": 8.32,
+    "total": 200.82,
+    "payment_method": "card",
+    "card_last4": "2061",
+    "receipt_number": null
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "name": "Ava & Viv",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 12.50
+    },
+    {
+      "line_id": 2,
+      "name": "IN MY HEART",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 18.99
+    },
+    {
+      "line_id": 3,
+      "name": "MP COFFEE",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.79
+    },
+    {
+      "line_id": 4,
+      "name": "ALANI ENERGY",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 12.99
+    },
+    {
+      "line_id": 5,
+      "name": "SKITTLES",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 6.49
+    },
+    {
+      "line_id": 6,
+      "name": "PREMIER",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 7.64
+    },
+    {
+      "line_id": 7,
+      "name": "YASSO",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 5.29
+    },
+    {
+      "line_id": 8,
+      "name": "PAPER TRAY",
+      "quantity": 3,
+      "unit_price": 3.00,
+      "item_total": 9.00
+    },
+    {
+      "line_id": 9,
+      "name": "LEGO 60384",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 20.49
+    }
+  ],
+  "evaluation_metadata": {
+    "currency": "USD",
+    "visible_payment_info": true,
+    "has_discounts_or_coupons": true,
+    "quality": "clean",
+    "notes": "Merchant name inferred from logo and store address. Total includes a Digital MFR Coupon and Debit payment. Note: The subtotal printed on the receipt ($192.50) significantly exceeds the sum of the visible line items, suggesting parts of the receipt are missing or occluded by the fold."
+  }
+}

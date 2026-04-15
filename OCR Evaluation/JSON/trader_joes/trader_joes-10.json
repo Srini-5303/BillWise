@@ -1,0 +1,220 @@
+{
+  "receipt_id": "traderjoes-10",
+  "image_file": "traderjoes-10.jpg",
+  "fields": {
+    "merchant_name": "TRADER JOE'S",
+    "date": "2019-01-11",
+    "time": "08:57 AM",
+    "subtotal": 47.76,
+    "tax": null,
+    "total": 47.76,
+    "payment_method": "card",
+    "card_last4": "0469",
+    "receipt_number": "0540 07 2711 5832"
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "name": "POTATO SWEET EACH",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 0.69
+    },
+    {
+      "line_id": 2,
+      "name": "ORG KIDNEY BEANS",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 0.99
+    },
+    {
+      "line_id": 3,
+      "name": "ORG KIDNEY BEANS",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 0.99
+    },
+    {
+      "line_id": 4,
+      "name": "YOGURT GREEK PLAIN 16 OZ",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.49
+    },
+    {
+      "line_id": 5,
+      "name": "OATMEAL CANISTER ORG OLD FASHN",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.69
+    },
+    {
+      "line_id": 6,
+      "name": "PEPPERS BELL RED ORG 12 OZ",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.49
+    },
+    {
+      "line_id": 7,
+      "name": "FLOUR TORTILLAS",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.29
+    },
+    {
+      "line_id": 8,
+      "name": "GREEN ONIONS 6 OZ",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.29
+    },
+    {
+      "line_id": 9,
+      "name": "GARLIC 2/BAG 3 OZ",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.39
+    },
+    {
+      "line_id": 10,
+      "name": "BANANA EACH",
+      "quantity": 2,
+      "unit_price": 0.19,
+      "item_total": 0.38
+    },
+    {
+      "line_id": 11,
+      "name": "CARROTS WHOLE ORG 1 LB",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 0.89
+    },
+    {
+      "line_id": 12,
+      "name": "LEMON EACH",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 0.49
+    },
+    {
+      "line_id": 13,
+      "name": "LEMON EACH",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 0.49
+    },
+    {
+      "line_id": 14,
+      "name": "LIME EACH",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 0.29
+    },
+    {
+      "line_id": 15,
+      "name": "POTATO DUTCH YELLOW 1.5 LB",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.79
+    },
+    {
+      "line_id": 16,
+      "name": "GARBANZO BEANS",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 0.79
+    },
+    {
+      "line_id": 17,
+      "name": "TOMATO BASIL MARINARA",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.79
+    },
+    {
+      "line_id": 18,
+      "name": "ORG TOMATO PASTE",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 0.89
+    },
+    {
+      "line_id": 19,
+      "name": "ORG DICED FIRE RSTD TOMATOES",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.69
+    },
+    {
+      "line_id": 20,
+      "name": "GARBANZO BEANS",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 0.79
+    },
+    {
+      "line_id": 21,
+      "name": "SHREDDED MEXICAN BLEND",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 22,
+      "name": "SHREDDED MOZZARELLA",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.79
+    },
+    {
+      "line_id": 23,
+      "name": "PLAIN PIZZA DOUGH",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.19
+    },
+    {
+      "line_id": 24,
+      "name": "SWEET ITALIAN PORK SAUSAGE",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.76
+    },
+    {
+      "line_id": 25,
+      "name": "GROUND BEEF 80/20",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 26,
+      "name": "ONIONS YELLOW JUMBO EACH",
+      "quantity": 2,
+      "unit_price": 0.79,
+      "item_total": 1.58
+    },
+    {
+      "line_id": 27,
+      "name": "PEPPER BELL GREEN EACH",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 0.89
+    },
+    {
+      "line_id": 28,
+      "name": "APPLE EACH GALA",
+      "quantity": 2,
+      "unit_price": 0.49,
+      "item_total": 0.98
+    }
+  ],
+  "evaluation_metadata": {
+    "currency": "USD",
+    "visible_payment_info": true,
+    "has_discounts_or_coupons": false,
+    "quality": "clean",
+    "notes": "Payment via Mastercard. Items count shows 31 total items (including units within lines); extracted 28 unique product lines."
+  }
+}

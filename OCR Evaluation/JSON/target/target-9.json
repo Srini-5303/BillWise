@@ -1,0 +1,31 @@
+{
+  "receipt_id": "target-9",
+  "image_file": "target-9.jpg",
+  "fields": {
+    "merchant_name": "TARGET",
+    "date": "2024-05-03",
+    "time": "04:15 PM",
+    "subtotal": 3.39,
+    "tax": 0.25,
+    "total": 3.30,
+    "payment_method": "cash",
+    "card_last4": null,
+    "receipt_number": "2-4124-2340-0165-4960-4"
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "name": "EXTRA",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.39
+    }
+  ],
+  "evaluation_metadata": {
+    "currency": "USD",
+    "visible_payment_info": true,
+    "has_discounts_or_coupons": true,
+    "quality": "clean",
+    "notes": "Payment made in cash ($20.00). Total includes a Team Member 10% Discount of $0.34."
+  }
+}

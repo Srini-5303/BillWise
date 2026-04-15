@@ -1,0 +1,66 @@
+{
+  "receipt_id": "target-7",
+  "image_file": "target-7.jpg",
+  "fields": {
+    "merchant_name": "TARGET",
+    "date": "2018-08-17",
+    "time": "08:36 PM",
+    "subtotal": 27.34,
+    "tax": 2.76,
+    "total": 30.10,
+    "payment_method": "card",
+    "card_last4": "9591",
+    "receipt_number": null
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "name": "LYSOL",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 5.99
+    },
+    {
+      "line_id": 2,
+      "name": "LYSOL",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 5.99
+    },
+    {
+      "line_id": 3,
+      "name": "TIDE 2X",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 11.99
+    },
+    {
+      "line_id": 4,
+      "name": "TIDE 2X",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 11.99
+    },
+    {
+      "line_id": 5,
+      "name": "TIDE 2X",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 9.19
+    },
+    {
+      "line_id": 6,
+      "name": "TIDE 2X",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 9.19
+    }
+  ],
+  "evaluation_metadata": {
+    "currency": "USD",
+    "visible_payment_info": true,
+    "has_discounts_or_coupons": true,
+    "quality": "clean",
+    "notes": "Split payment used (Gift Card *2140 and Debit *9591). Subtotal accounts for multiple manufacturer and category coupons."
+  }
+}

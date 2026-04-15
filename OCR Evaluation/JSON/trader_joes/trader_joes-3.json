@@ -1,0 +1,262 @@
+{
+  "receipt_id": "traderjoes-3",
+  "image_file": "traderjoes-3.jpg",
+  "fields": {
+    "merchant_name": "TRADER JOE'S",
+    "date": null,
+    "time": null,
+    "subtotal": null,
+    "tax": 1.54,
+    "total": 128.42,
+    "payment_method": "card",
+    "card_last4": null,
+    "receipt_number": null
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "name": "CHOC SNACKY CLUSTERS",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 2,
+      "name": "TORTILLA CHIPS TRULY",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 3,
+      "name": "CRACKERS SAVORY SQUARES",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 4,
+      "name": "TRADER JOSE'S LAGER BEER",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 7.49
+    },
+    {
+      "line_id": 5,
+      "name": "SAVORY THIN MULTISEED CR",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 6,
+      "name": "PARMESAN GRATED CHEESE",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.49
+    },
+    {
+      "line_id": 7,
+      "name": "HOT & SWEET JALAPENOS",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.29
+    },
+    {
+      "line_id": 8,
+      "name": "SHORTBREAD SANDWICH RASP",
+      "quantity": 2,
+      "unit_price": 2.99,
+      "item_total": 5.98
+    },
+    {
+      "line_id": 9,
+      "name": "SHREDDED SHARP CHEDDAR",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 10,
+      "name": "SHREDDED LITE MEXICAN BL",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 11,
+      "name": "RIDGE CUT POTATO CHIPS S",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 12,
+      "name": "GUMMY SPRING",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.49
+    },
+    {
+      "line_id": 13,
+      "name": "SPINACH SOUR CREAM DIP",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 14,
+      "name": "SALSA AUTENTICA",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.29
+    },
+    {
+      "line_id": 15,
+      "name": "R-GRAPES HONEY PEARLS 2L",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 7.99
+    },
+    {
+      "line_id": 16,
+      "name": "BAMBA PEANUT SNACKS",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.79
+    },
+    {
+      "line_id": 17,
+      "name": "ESPIRAL VINHO VERDE",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.99
+    },
+    {
+      "line_id": 18,
+      "name": "THE PUPPET CHILLABLE RED",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 7.99
+    },
+    {
+      "line_id": 19,
+      "name": "CAVE AGED BLUE",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.28
+    },
+    {
+      "line_id": 20,
+      "name": "CORN TORTILLAS",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.69
+    },
+    {
+      "line_id": 21,
+      "name": "TOMATOES CAMPARI 1 LB",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.49
+    },
+    {
+      "line_id": 22,
+      "name": "R-ICEBERG SHREDDED 8OZ",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.69
+    },
+    {
+      "line_id": 23,
+      "name": "POTATO SWEET ORG 3 LB",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.99
+    },
+    {
+      "line_id": 24,
+      "name": "APPLE EACH HONEYCRISP",
+      "quantity": 2,
+      "unit_price": 1.29,
+      "item_total": 2.58
+    },
+    {
+      "line_id": 25,
+      "name": "R-BBQ TOSCANO COMPLETE C",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.49
+    },
+    {
+      "line_id": 26,
+      "name": "PEAS SUGAR SNAP 12 OZ",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 27,
+      "name": "ENCHILADA SAUCE",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 28,
+      "name": "HOT SAUCE CHUNKY GARLIC",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 29,
+      "name": "UNEXPECTED CHEDDAR",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 30,
+      "name": "SALAD DRESSING RANCH",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 31,
+      "name": "PETITE PEAS",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.79
+    },
+    {
+      "line_id": 32,
+      "name": "ONIONS SWEET JUMBO EACH",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 0.99
+    },
+    {
+      "line_id": 33,
+      "name": "BANANA ORG EACH",
+      "quantity": 6,
+      "unit_price": 0.29,
+      "item_total": 1.74
+    },
+    {
+      "line_id": 34,
+      "name": "VEGETABLE MASALA BURGERS",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.49
+    }
+  ],
+  "evaluation_metadata": {
+    "currency": "USD",
+    "visible_payment_info": true,
+    "has_discounts_or_coupons": false,
+    "quality": "clean",
+    "notes": "Merchant address and store #0712 are visible. Payment method is VISA. Date/time missing from this part of the receipt. Subtotal calculated as Total minus Tax."
+  }
+}

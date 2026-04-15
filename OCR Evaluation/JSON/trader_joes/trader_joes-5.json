@@ -1,0 +1,227 @@
+{
+  "receipt_id": "traderjoes-5",
+  "image_file": "traderjoes-5.jpg",
+  "fields": {
+    "merchant_name": "TRADER JOE'S",
+    "date": "2015-12-18",
+    "time": "04:34 PM",
+    "subtotal": 102.87,
+    "tax": 0.76,
+    "total": 103.63,
+    "payment_method": "cash",
+    "card_last4": null,
+    "receipt_number": "0676 02 4852 7281"
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "name": "APTZR PARMESAN PASTRY PUPS",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.49
+    },
+    {
+      "line_id": 2,
+      "name": "DIP SPINACH & ARTICHOKE",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 3,
+      "name": "SIDE CHICKEN SALAD REDUCED GUI",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.49
+    },
+    {
+      "line_id": 4,
+      "name": "SIDE CHICKEN SALAD WINE COUNTR",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.49
+    },
+    {
+      "line_id": 5,
+      "name": "ICE CREAM SPECULOOS COOKIE BUT",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.49
+    },
+    {
+      "line_id": 6,
+      "name": "DESSERT BANANA BITES CHOC GONE",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.99
+    },
+    {
+      "line_id": 7,
+      "name": "APTZR MOZZARELLA STICK BREADED",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 8,
+      "name": "TJ'S STRING CHEESE",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 9,
+      "name": "WHITE CHEDDAR POPCORN",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.69
+    },
+    {
+      "line_id": 10,
+      "name": "WHITE CHEDDAR POPCORN",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.69
+    },
+    {
+      "line_id": 11,
+      "name": "GF COOKIES CRISPY CHOC CHIP",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 12,
+      "name": "HOT COCOA MIX ORGANIC INSTANT",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.29
+    },
+    {
+      "line_id": 13,
+      "name": "TJ'S HONEY NUT O'S CEREAL",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.29
+    },
+    {
+      "line_id": 14,
+      "name": "PEANUT BUTTER DOG BISCUITS TJ",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.49
+    },
+    {
+      "line_id": 15,
+      "name": "COOKIE BROWNIE CRISP",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 16,
+      "name": "GOLDEN ROUND CRACKERS",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.99
+    },
+    {
+      "line_id": 17,
+      "name": "BAKING MIX BLONDIE BAR",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 18,
+      "name": "MEX TACOS CHICKEN MINI",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.29
+    },
+    {
+      "line_id": 19,
+      "name": "ENTREE QUESADILLA CHICKEN SOUT",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.69
+    },
+    {
+      "line_id": 20,
+      "name": "GROUND TURKEY",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 21,
+      "name": "NATURAL CHICKEN TENDERS",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 5.16
+    },
+    {
+      "line_id": 22,
+      "name": "DIP SPINACH & KALE GREEK YOGUR",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 23,
+      "name": "YOGURT SQUISHERS STRAWBERRY.",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.19
+    },
+    {
+      "line_id": 24,
+      "name": "SLICED HONEY SMOKED TURKEY",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.99
+    },
+    {
+      "line_id": 25,
+      "name": "EGG NOG PREMIUM TRADER JOE'S",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 26,
+      "name": "CRACKERS SANDWICH PNT BUTTER",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.69
+    },
+    {
+      "line_id": 27,
+      "name": "SPREAD SPECULOOS & COCOA SWIR",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 28,
+      "name": "ORGANIC SPAGHETTI PASTA",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.29
+    },
+    {
+      "line_id": 29,
+      "name": "PASTA SAUCE ALFREDO",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.29
+    }
+  ],
+  "evaluation_metadata": {
+    "currency": "USD",
+    "visible_payment_info": true,
+    "has_discounts_or_coupons": false,
+    "quality": "clean",
+    "notes": "One item name (AIRBORNE ORANGE) is partially obscured by the fold and was omitted to be conservative per instructions. Items count shows 30, extracted 29 clear lines."
+  }
+}

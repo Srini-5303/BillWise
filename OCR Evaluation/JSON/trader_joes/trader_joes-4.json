@@ -1,0 +1,31 @@
+{
+  "receipt_id": "traderjoes-4",
+  "image_file": "traderjoes-4.jpg",
+  "fields": {
+    "merchant_name": "TRADER JOE'S",
+    "date": "2005-11-12",
+    "time": "12:04 PM",
+    "subtotal": 3.99,
+    "tax": 0.33,
+    "total": 4.32,
+    "payment_method": "cash",
+    "card_last4": null,
+    "receipt_number": "0116 08 0501 5986"
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "name": "PREMIUM POULTRY DRY CAT FOOD",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    }
+  ],
+  "evaluation_metadata": {
+    "currency": "USD",
+    "visible_payment_info": true,
+    "has_discounts_or_coupons": false,
+    "quality": "clean",
+    "notes": "Merchant name from header and footer. Payment method is cash. Receipt number string corresponds to the footer transaction data."
+  }
+}

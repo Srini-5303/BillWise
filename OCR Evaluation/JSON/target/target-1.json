@@ -1,0 +1,73 @@
+{
+  "receipt_id": "target-1",
+  "image_file": "target-1.jpg",
+  "fields": {
+    "merchant_name": "TARGET",
+    "date": "2017-12-09",
+    "time": "12:16 PM",
+    "subtotal": 27.34,
+    "tax": 1.70,
+    "total": 29.04,
+    "payment_method": "card",
+    "card_last4": "4548",
+    "receipt_number": "2-7343-1481-0173-6551-9"
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "name": "KISSES",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.00
+    },
+    {
+      "line_id": 2,
+      "name": "BUTTERFINGER",
+      "quantity": 3,
+      "unit_price": 3.00,
+      "item_total": 9.00
+    },
+    {
+      "line_id": 3,
+      "name": "FOOD COLOR",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 4,
+      "name": "UP UP",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.59
+    },
+    {
+      "line_id": 5,
+      "name": "CONAIR HEADB",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 6,
+      "name": "CONAIR CLIPS",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.79
+    },
+    {
+      "line_id": 7,
+      "name": "CHAPSTICK 2",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.98
+    }
+  ],
+  "evaluation_metadata": {
+    "currency": "USD",
+    "visible_payment_info": true,
+    "has_discounts_or_coupons": true,
+    "quality": "clean",
+    "notes": "Butterfinger item shows quantity calculation and savings notation."
+  }
+}

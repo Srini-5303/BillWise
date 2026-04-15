@@ -1,0 +1,199 @@
+{
+  "receipt_id": "traderjoes-1",
+  "image_file": "traderjoes-1.jpg",
+  "fields": {
+    "merchant_name": "TRADER JOE'S",
+    "date": null,
+    "time": null,
+    "subtotal": 64.04,
+    "tax": null,
+    "total": 64.04,
+    "payment_method": null,
+    "card_last4": null,
+    "receipt_number": null
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "name": "HARVEST BREAD",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.99
+    },
+    {
+      "line_id": 2,
+      "name": "PASTA WHOLE WHEAT PENNE ORGANI",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.49
+    },
+    {
+      "line_id": 3,
+      "name": "BANANAS",
+      "quantity": 12,
+      "unit_price": 0.19,
+      "item_total": 2.28
+    },
+    {
+      "line_id": 4,
+      "name": "MILK HALF GAL ALMOND UNSWEETEN",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 5,
+      "name": "A-LEMON BAG 1 LB..",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.49
+    },
+    {
+      "line_id": 6,
+      "name": "ORGANIC LF VANILLA YOG- 32 OZ.",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.29
+    },
+    {
+      "line_id": 7,
+      "name": "R-CARROTS CUT & PEELED ORGANIC",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.49
+    },
+    {
+      "line_id": 8,
+      "name": "R-STRAWBERRIES ORG 1 LB",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.49
+    },
+    {
+      "line_id": 9,
+      "name": "A-AVOCADOS HASS BAG 4CT",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 10,
+      "name": "UNSALTED BUTTER QUARTERS.",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.19
+    },
+    {
+      "line_id": 11,
+      "name": "TJ'S STRING CHEESE",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 12,
+      "name": "VEG BROCCOLI FLORETS ORGANIC",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.49
+    },
+    {
+      "line_id": 13,
+      "name": "LENTILS RED SPLIT",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.69
+    },
+    {
+      "line_id": 14,
+      "name": "R-SALAD ORGANIC BABY SPINACH 6",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.99
+    },
+    {
+      "line_id": 15,
+      "name": "TJ'S HONEY NUT O'S CEREAL",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.49
+    },
+    {
+      "line_id": 16,
+      "name": "TJ'S BNLS SNLS CHICKEN BREASTS",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.22
+    },
+    {
+      "line_id": 17,
+      "name": "A-APPLE BAG JAZZ 2 LB",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.69
+    },
+    {
+      "line_id": 18,
+      "name": "A-POTATO BAG SWEET 2 LB",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.79
+    },
+    {
+      "line_id": 19,
+      "name": "R-HERB CILANTRO BUNCH",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 0.99
+    },
+    {
+      "line_id": 20,
+      "name": "BEANS BLACK",
+      "quantity": 4,
+      "unit_price": 0.89,
+      "item_total": 3.56
+    },
+    {
+      "line_id": 21,
+      "name": "HUMMUS 7 OZ",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.99
+    },
+    {
+      "line_id": 22,
+      "name": "GROUND TURKEY",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 23,
+      "name": "SWEET ITALIAN CKN SAUSAGE",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 24,
+      "name": "TJ'S HONEY NUT O'S CEREAL",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.49
+    },
+    {
+      "line_id": 25,
+      "name": "HARVEST BREAD",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.99
+    }
+  ],
+  "evaluation_metadata": {
+    "currency": "USD",
+    "visible_payment_info": false,
+    "has_discounts_or_coupons": false,
+    "quality": "clean",
+    "notes": "Date, time, and payment details are not visible on this portion of the receipt. Quantity for 'BEANS BLACK' was inferred from '40Z' as 4 units of 10oz or simply 4 items at the 0.89 unit price."
+  }
+}

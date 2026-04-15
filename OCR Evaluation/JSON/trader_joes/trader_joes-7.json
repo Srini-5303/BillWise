@@ -1,0 +1,290 @@
+{
+  "receipt_id": "traderjoes-7",
+  "image_file": "traderjoes-7.jpg",
+  "fields": {
+    "merchant_name": "TRADER JOE'S",
+    "date": null,
+    "time": null,
+    "subtotal": 123.58,
+    "tax": 1.49,
+    "total": 125.07,
+    "payment_method": "card",
+    "card_last4": null,
+    "receipt_number": null
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "name": "TOMATO FETA SOUP",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 2,
+      "name": "VANILLA ICE CREAM QT",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 3,
+      "name": "YOGURT ORGANIC VANILLA 32OZ LF",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.29
+    },
+    {
+      "line_id": 4,
+      "name": "BEVERAGE OAT ORIGINAL HALF GAL",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 5,
+      "name": "CREAM MIDSUMMER NIGHTS",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 6,
+      "name": "TANGERINE 52 OZ",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 7,
+      "name": "CREAMY TOMATO BASIL",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 8,
+      "name": "BURRITO BREAKFAST CHICKEN SAUS",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 9,
+      "name": "SLICED COLBY JACK",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.49
+    },
+    {
+      "line_id": 10,
+      "name": "SLICED PROVOLONE",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.49
+    },
+    {
+      "line_id": 11,
+      "name": "ENGLISH CHEDDAR W CARAMELIZED",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.58
+    },
+    {
+      "line_id": 12,
+      "name": "HAND SANITIZER TJ'S 8OZ",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 13,
+      "name": "PINEAPPLE EACH",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 14,
+      "name": "HOL MAC & CHEESE BUTTERNUT SQU",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 15,
+      "name": "GRANOLA PECAN PRALINE",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.29
+    },
+    {
+      "line_id": 16,
+      "name": "LAM AND RICE CAN DOG FOOD",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.59
+    },
+    {
+      "line_id": 17,
+      "name": "ONIONS RED ORG 2 LB",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.29
+    },
+    {
+      "line_id": 18,
+      "name": "COOKIES MOLASSES",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.99
+    },
+    {
+      "line_id": 19,
+      "name": "POMEGRANATE EACH ORGANIC",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.69
+    },
+    {
+      "line_id": 20,
+      "name": "BLUEBERRIES ORG 6 OZ",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.49
+    },
+    {
+      "line_id": 21,
+      "name": "SUNSCREEN SPRAY SPF 50",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 5.99
+    },
+    {
+      "line_id": 22,
+      "name": "TOMATO BASIL MARINARA",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.79
+    },
+    {
+      "line_id": 23,
+      "name": "FUDGE SAUCE & FONDUE",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 3.49
+    },
+    {
+      "line_id": 24,
+      "name": "HERB GOAT LOG",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 25,
+      "name": "ORGANIC COLD BREW TEA CONCENTR",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 4.99
+    },
+    {
+      "line_id": 26,
+      "name": "HOL PIE APPLE CARAMEL SLAB",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 6.99
+    },
+    {
+      "line_id": 27,
+      "name": "ORG APPLE STRAWBERRY FRUIT WRA",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 0.49
+    },
+    {
+      "line_id": 28,
+      "name": "ORG APPLE RASPBERRY FRUIT WRAP",
+      "quantity": 4,
+      "unit_price": 0.49,
+      "item_total": 1.96
+    },
+    {
+      "line_id": 29,
+      "name": "ORG APPLE BLUEBERRY FRUIT WRAP",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 0.49
+    },
+    {
+      "line_id": 30,
+      "name": "CUCUMBERS PERSIAN 1 LB",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.19
+    },
+    {
+      "line_id": 31,
+      "name": "SQUASH YELLOW 1 LB",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.29
+    },
+    {
+      "line_id": 32,
+      "name": "GIANT CHALKIDIKI OLIVES",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.29
+    },
+    {
+      "line_id": 33,
+      "name": "OIL CANOLA SPRAY",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.29
+    },
+    {
+      "line_id": 34,
+      "name": "PLAIN ENGLISH MUFFINS",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 1.49
+    },
+    {
+      "line_id": 35,
+      "name": "PEAR EACH BOSC",
+      "quantity": 2,
+      "unit_price": 0.79,
+      "item_total": 1.58
+    },
+    {
+      "line_id": 36,
+      "name": "SQUASH ORG SPAGHETTI EACH",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 2.99
+    },
+    {
+      "line_id": 37,
+      "name": "PUMPKIN BIN FALL FANTASY",
+      "quantity": null,
+      "unit_price": null,
+      "item_total": 6.99
+    },
+    {
+      "line_id": 38,
+      "name": "BAG FEE",
+      "quantity": 2,
+      "unit_price": 0.10,
+      "item_total": 0.20
+    }
+  ],
+  "evaluation_metadata": {
+    "currency": "USD",
+    "visible_payment_info": true,
+    "has_discounts_or_coupons": false,
+    "quality": "clean",
+    "notes": "Payment method identified as DEBIT. Store address and #018 are visible. Date and time are cut off/not visible in this photo."
+  }
+}
