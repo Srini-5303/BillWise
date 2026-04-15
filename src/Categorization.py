@@ -11,7 +11,9 @@ IMPORTANT: Do NOT modify billwise_pipeline.py — import only.
 """
 
 import json
+import logging
 import os
+import re
 import datetime
 import pathlib
 
@@ -45,6 +47,11 @@ CONFIG = {
     "dataset_path":        "F:\Study\Sem 4\AI Capstone\data\Processed_Datasets\Labeled\merged_labeled.csv",
     "unresolved_log":      "logs/unresolved_items.json",
     "low_confidence_log":  "logs/low_confidence_items.json",
+    "human_review_log":    "logs/human_review_items.json",
+
+    # Gemini LLM fallback (medium-confidence tier)
+    "gemini_model":        "gemini-2.0-flash-lite",
+    "gemini_api_key":      None,   # reads GEMINI_API_KEY env var if None
 
     # 16 canonical categories in label order (must match training label2id)
     "labels": [
@@ -60,6 +67,9 @@ ROUTE_AUTO       = "auto_assign"             # high confidence  → direct to Go
 ROUTE_LLM        = "llm_verification"        # medium confidence → LLM verification
 ROUTE_HUMAN      = "human_review"            # low confidence   → human review queue
 ROUTE_UNRESOLVED = "unresolved_abbreviation" # unrecognizable abbreviation → human verification
+
+# Sentinel returned by categorize() when an item must go to the review dashboard
+HUMAN_REVIEW_NEEDED = "HUMAN_REVIEW_NEEDED"
 
 
 # ---------------------------------------------------------------------------
@@ -257,6 +267,156 @@ def log_item(filepath: str, entry: dict) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Gemini LLM Fallback (medium-confidence tier)
+# ---------------------------------------------------------------------------
+
+def llm_fallback_gemini(
+    item_text: str,
+    normalized_text: str,
+    classification: dict,
+    config: dict,
+) -> dict:
+    """
+    Call a small Gemini model to verify/reclassify an item when DistilBERT
+    confidence falls in the medium tier (ROUTE_LLM).
+
+    The prompt gives Gemini the raw text, normalized text, DistilBERT's top
+    prediction, and the top-5 softmax scores as context.  Gemini responds
+    with a JSON payload containing its chosen label and its own confidence.
+
+    Returns:
+        final_label        — Gemini's validated category label
+        confidence         — "low" | "medium" | "high" (Gemini-reported)
+        reason             — one-sentence explanation
+        needs_human_review — True when Gemini confidence is "low"
+    """
+    import google.generativeai as genai
+
+    api_key = config.get("gemini_api_key") or os.environ.get("GEMINI_API_KEY")
+    if not api_key:
+        logging.warning(
+            "Categorizer: GEMINI_API_KEY not set — escalating '%s' to human review.",
+            item_text,
+        )
+        return {
+            "final_label":        classification["predicted_label"],
+            "confidence":         "low",
+            "reason":             "GEMINI_API_KEY not configured.",
+            "needs_human_review": True,
+        }
+
+    genai.configure(api_key=api_key)
+    gemini = genai.GenerativeModel(config.get("gemini_model", "gemini-2.0-flash-lite"))
+
+    # Top-5 DistilBERT scores as context for Gemini
+    top5 = sorted(
+        classification["all_scores"].items(), key=lambda kv: kv[1], reverse=True
+    )[:5]
+    candidates_text = "\n".join(
+        f"  {i + 1}. {label} (score: {score:.4f})"
+        for i, (label, score) in enumerate(top5)
+    )
+    allowed = ", ".join(config["labels"])
+
+    prompt = f"""You are a grocery/food item categorization expert.
+
+A receipt scanner returned this item text:
+  Original  : "{item_text}"
+  Normalized: "{normalized_text}"
+
+A DistilBERT classifier predicted "{classification['predicted_label']}" with \
+confidence {classification['confidence']:.4f} (medium — needs verification).
+
+Top 5 candidate categories from the classifier:
+{candidates_text}
+
+Allowed categories: {allowed}
+
+Choose the most appropriate category. If you are genuinely uncertain, set \
+confidence to "low" so a human reviewer can be notified.
+
+Respond with ONLY valid JSON (no markdown, no extra text):
+{{
+  "final_label": "<one of the allowed categories>",
+  "confidence": "<low|medium|high>",
+  "reason": "<one sentence>"
+}}"""
+
+    try:
+        response = gemini.generate_content(prompt)
+        raw = response.text.strip()
+        raw = re.sub(r"^```(?:json)?\s*", "", raw)
+        raw = re.sub(r"\s*```$", "", raw)
+        result = json.loads(raw)
+
+        # Validate label — fall back to DistilBERT's prediction on bad output
+        if result.get("final_label") not in config["labels"]:
+            result["final_label"] = classification["predicted_label"]
+            result["confidence"]  = "low"
+
+        result["needs_human_review"] = (result.get("confidence") == "low")
+        return result
+
+    except Exception as exc:
+        logging.error("Categorizer: Gemini call failed for '%s' — %s", item_text, exc)
+        return {
+            "final_label":        classification["predicted_label"],
+            "confidence":         "low",
+            "reason":             f"Gemini call failed: {exc}",
+            "needs_human_review": True,
+        }
+
+
+# ---------------------------------------------------------------------------
+# Human Review Placeholder
+# ---------------------------------------------------------------------------
+
+def flag_human_review(
+    item_text: str,
+    normalized_text: str,
+    classification: dict,
+    reason: str,
+    config: dict,
+) -> dict:
+    """
+    Placeholder: mark an item as requiring human review and log it.
+
+    Writes a structured entry to the human review log so a future dashboard
+    can surface it.  The returned dict contains a human-readable message and
+    the DistilBERT best-guess label for pre-population of the review UI.
+
+    Returns:
+        needs_human_review   — always True
+        human_review_message — descriptive message for display / dashboard
+        suggested_label      — DistilBERT's best guess (unconfirmed)
+    """
+    entry = {
+        "timestamp":       datetime.datetime.now().isoformat(),
+        "input":           item_text,
+        "normalized":      normalized_text,
+        "suggested_label": classification["predicted_label"],
+        "confidence":      classification["confidence"],
+        "reason":          reason,
+        "status":          "pending_human_review",
+    }
+    log_item(config.get("human_review_log", "logs/human_review_items.json"), entry)
+
+    message = (
+        f"Human review required for: '{item_text}' — "
+        f"best guess '{classification['predicted_label']}' "
+        f"(confidence={classification['confidence']:.4f}). "
+        f"Reason: {reason}"
+    )
+    print(f"\n[HUMAN REVIEW NEEDED] {message}")
+
+    return {
+        "needs_human_review":  True,
+        "human_review_message": message,
+        "suggested_label":     classification["predicted_label"],
+    }
+
+
+# ---------------------------------------------------------------------------
 # Main Pipeline Function
 # ---------------------------------------------------------------------------
 
@@ -332,56 +492,109 @@ def run_inference(
     classification = classify(normalized_text, model, tokenizer, device, config)
     routing        = classification["routing"]
 
-    # ── Step 4: Routing & logging ────────────────────────────────────────────
-    if routing == ROUTE_HUMAN or flagged_unresolved:
+    # ── Step 4: Routing, LLM fallback & logging ─────────────────────────────
+    llm_result           = None
+    llm_used             = False
+    needs_human_review   = False
+    human_review_message = None
+    final_label          = classification["predicted_label"]
+
+    if routing == ROUTE_AUTO:
+        print(
+            f"\n[AUTO-ASSIGN] '{item_text}' → '{final_label}' "
+            f"(confidence={classification['confidence']:.4f}). Assigned automatically."
+        )
+
+    elif routing == ROUTE_LLM:
+        # Medium confidence — call Gemini to verify
+        print(
+            f"\n[LLM VERIFICATION] '{item_text}' → '{final_label}' "
+            f"(confidence={classification['confidence']:.4f}). Calling Gemini..."
+        )
+        llm_result = llm_fallback_gemini(item_text, normalized_text, classification, config)
+        llm_used   = True
+
+        if llm_result["needs_human_review"]:
+            # Gemini also uncertain → escalate to human review
+            hr = flag_human_review(
+                item_text, normalized_text, classification,
+                (
+                    f"DistilBERT medium confidence ({classification['confidence']:.4f}); "
+                    f"Gemini also uncertain. Gemini reason: {llm_result.get('reason', 'n/a')}"
+                ),
+                config,
+            )
+            needs_human_review   = True
+            human_review_message = hr["human_review_message"]
+            final_label          = hr["suggested_label"]
+        else:
+            final_label = llm_result["final_label"]
+            print(
+                f"  [GEMINI] Resolved → '{final_label}' "
+                f"(confidence={llm_result.get('confidence', 'n/a')}). "
+                f"Reason: {llm_result.get('reason', '')}"
+            )
+            log_item(
+                config["low_confidence_log"],
+                {
+                    "timestamp":             timestamp,
+                    "input":                 item_text,
+                    "normalized":            normalized_text,
+                    "distilbert_label":      classification["predicted_label"],
+                    "distilbert_confidence": classification["confidence"],
+                    "gemini_label":          final_label,
+                    "gemini_confidence":     llm_result.get("confidence"),
+                    "reason":                llm_result.get("reason"),
+                    "routing":               routing,
+                    "flagged_unresolved":    flagged_unresolved,
+                },
+            )
+
+    elif routing == ROUTE_HUMAN:
+        # Low DistilBERT confidence — flag directly for human review
+        hr = flag_human_review(
+            item_text, normalized_text, classification,
+            f"DistilBERT low confidence ({classification['confidence']:.4f})",
+            config,
+        )
+        needs_human_review   = True
+        human_review_message = hr["human_review_message"]
+        final_label          = hr["suggested_label"]
+
+    # Unresolved abbreviations that sailed through auto-assign still get a
+    # low-confidence log entry so they remain traceable.
+    if flagged_unresolved and routing == ROUTE_AUTO:
         log_item(
             config["low_confidence_log"],
             {
-                "timestamp":         timestamp,
-                "input":             item_text,
-                "normalized":        normalized_text,
-                "abbreviation_info": abbrev_info,
-                "predicted_label":   classification["predicted_label"],
-                "confidence":        classification["confidence"],
-                "routing":           routing,
+                "timestamp":          timestamp,
+                "input":              item_text,
+                "normalized":         normalized_text,
+                "abbreviation_info":  abbrev_info,
+                "predicted_label":    final_label,
+                "confidence":         classification["confidence"],
+                "routing":            routing,
                 "flagged_unresolved": flagged_unresolved,
             },
-        )
-        if routing == ROUTE_HUMAN:
-            print(
-                f"\n[LOW CONFIDENCE] '{item_text}' → '{classification['predicted_label']}' "
-                f"(confidence={classification['confidence']:.4f}). "
-                f"Sent to human review queue."
-            )
-
-    elif routing == ROUTE_LLM:
-        print(
-            f"\n[LLM VERIFICATION] '{item_text}' → '{classification['predicted_label']}' "
-            f"(confidence={classification['confidence']:.4f}). "
-            f"Queued for LLM verification."
-        )
-        # TODO: Call llm_fallback() from billwise_pipeline.py here
-        #       Pass: original, normalized, and a mock match_result dict
-        #       This will be wired in the next integration phase
-
-    elif routing == ROUTE_AUTO:
-        print(
-            f"\n[AUTO-ASSIGN] '{item_text}' → '{classification['predicted_label']}' "
-            f"(confidence={classification['confidence']:.4f}). Assigned automatically."
         )
 
     # ── Step 5: Unified result dict ──────────────────────────────────────────
     return {
-        "input":             item_text,
-        "normalized":        normalized_text,
-        "was_normalized":    was_normalized,
-        "abbreviation_info": abbrev_info,
-        "predicted_label":   classification["predicted_label"],
-        "confidence":        classification["confidence"],
-        "all_scores":        classification["all_scores"],
-        "routing":           routing,
-        "flagged_unresolved": flagged_unresolved,
-        "timestamp":         timestamp,
+        "input":                item_text,
+        "normalized":           normalized_text,
+        "was_normalized":       was_normalized,
+        "abbreviation_info":    abbrev_info,
+        "predicted_label":      classification["predicted_label"],
+        "confidence":           classification["confidence"],
+        "all_scores":           classification["all_scores"],
+        "routing":              routing,
+        "flagged_unresolved":   flagged_unresolved,
+        "final_label":          final_label,
+        "llm_used":             llm_used,
+        "llm_result":           llm_result,
+        "needs_human_review":   needs_human_review,
+        "human_review_message": human_review_message,
+        "timestamp":            timestamp,
     }
 
 
@@ -414,6 +627,14 @@ def print_inference_result(result: dict) -> None:
     print(f"  PREDICTION     : {result['predicted_label']}")
     print(f"  CONFIDENCE     : {result['confidence']:.4f}")
     print(f"  ROUTING        : {result['routing']}")
+    if result.get("llm_used"):
+        llm = result.get("llm_result") or {}
+        print(f"  GEMINI LABEL   : {llm.get('final_label', 'n/a')}")
+        print(f"  GEMINI CONF    : {llm.get('confidence', 'n/a')}")
+        print(f"  GEMINI REASON  : {llm.get('reason', 'n/a')}")
+    print(f"  FINAL LABEL    : {result.get('final_label', result['predicted_label'])}")
+    if result.get("needs_human_review"):
+        print("  !! HUMAN REVIEW NEEDED !!")
     print("  ────────────────────────────────────────────")
     print("  TOP 3 SCORES   :")
     for rank, (label, score) in enumerate(top3, 1):
