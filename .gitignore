@@ -13,3 +13,9 @@ receipts&labels/
 raw_images/
 logs/
 *.log
+.env
+.venv/
+*.db
+*.sqlite3
+gcp_credentials.json
+.DS_Store
