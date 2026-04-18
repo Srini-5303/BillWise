@@ -87,8 +87,8 @@ No app to install. No manual entry. Just text a photo.
    - Multi-turn conversation with context history
 
 **Confidence-based routing adds a human-in-the-loop:**
-- High confidence (≥ 0.85) → auto-assigned category
-- Medium confidence (0.60–0.85) → LLM verification
+- High confidence (≥ 0.85) → auto-assigned categy
+- Medium confidence (0.60–0.85) → LLM verificaortion
 - Low confidence (< 0.60) → flagged for human review
 
 ---

@@ -1,48 +1,42 @@
-import os
+import sys
 from google.cloud import vision
-
-RAW_FOLDER = "raw_images"
-
-client = vision.ImageAnnotatorClient()
-
-
-def extract_text(path):
-    with open(path, "rb") as img:
-        content = img.read()
-
-    image = vision.Image(content=content)
-    response = client.text_detection(image=image)
-
-    if response.text_annotations:
-        return response.text_annotations[0].description
-
-    return ""
+from ocr_pipeline import extract_text, process_image
 
 
 def main():
+    if len(sys.argv) < 2:
+        print("Usage: python vision_test.py <path_to_image>")
+        sys.exit(1)
 
-    # change this if your file name differs
-    target = "bill1"
+    path = sys.argv[1]
 
-    for f in os.listdir(RAW_FOLDER):
+    print("\n==============================")
+    print("FILE:", path)
+    print("==============================\n")
 
-        name = os.path.splitext(f)[0].lower()
+    raw = extract_text(path)
+    print("── RAW OCR TEXT ──────────────────────────")
+    print(raw)
+    print("──────────────────────────────────────────\n")
 
-        if name == target:
+    result = process_image(path)
 
-            path = os.path.join(RAW_FOLDER, f)
+    print(f"Store          : {result['store']}")
+    print(f"Date           : {result['date']}")
+    print(f"Time           : {result['time']}")
+    print(f"Subtotal       : {result['subtotal']}")
+    print(f"Tax            : {result['tax']}")
+    print(f"Total          : {result['total']}")
+    print(f"Card           : {result['card']}")
+    print(f"Payment Method : {result['payment_method']}")
+    print(f"Receipt No     : {result['receipt_number']}")
+    print(f"\nItems ({len(result['items'])}):")
+    for name, price in result["items"]:
+        print(f"  {price:>10}  {name}")
 
-            print("\n==============================")
-            print("FILE:", f)
-            print("==============================\n")
-
-            text = extract_text(path)
-
-            print(text)
-
-            print("\n==============================")
-            print("END OCR")
-            print("==============================\n")
+    print("\n==============================")
+    print("END OCR")
+    print("==============================\n")
 
 
 if __name__ == "__main__":

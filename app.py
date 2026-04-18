@@ -89,7 +89,11 @@ def webhook():
         log.info("Text message: %r", text)
         if _is_question(text):
             log.info("Routing to chatbot")
-            answer = handle_chat_message(session_id=sender, message=text)
+            try:
+                answer = handle_chat_message(session_id=sender, message=text)
+            except Exception as e:
+                log.exception("Chatbot error: %s", e)
+                answer = "❌ Sorry, something went wrong. Please try again."
             resp.message(answer)
         else:
             log.info("Not a question — returning help message")

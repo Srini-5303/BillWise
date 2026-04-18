@@ -54,22 +54,37 @@ def extract_card_last4(text):
     lines = [l.strip().upper() for l in text.split("\n") if l.strip()]
     card_keywords = ["VISA", "MASTERCARD", "CARD", "DEBIT", "CREDIT", "REFERENCE#"]
 
-    for line in lines:
-        if any(k in line for k in card_keywords):
-            match = re.search(r"\d{4}", line)
-            if match:
-                return match.group()
+    for i, line in enumerate(lines):
+        # Masked card pattern anywhere: XXXX1234 or ****1234
         match = re.search(r"[X\*]{4,}\d{4}", line)
         if match:
             return match.group()[-4:]
+
+        if any(k in line for k in card_keywords):
+            # 4 digits on the same line
+            match = re.search(r"\b(\d{4})\b", line)
+            if match:
+                return match.group(1)
+            # Card number may be on the next line (e.g. "Card No.\n8352")
+            if i + 1 < len(lines):
+                next_line = lines[i + 1]
+                match = re.search(r"\b(\d{4})\b", next_line)
+                if match:
+                    return match.group(1)
     return "cash"
 
 def detect_store(lines):
-    for line in lines[:10]:
+    for line in lines[:15]:
         clean = line.strip()
+        if not clean:
+            continue
         if re.search(r"\d{1,2}/\d{1,2}/\d{2,4}", clean):
             continue
         if re.search(r"\d+\.\d{2}", clean):
+            continue
+        # Skip noise lines — less than half the chars are alphanumeric/space
+        alnum = sum(c.isalnum() or c == " " for c in clean)
+        if alnum / len(clean) < 0.5:
             continue
         if len(clean) > 3:
             return clean
@@ -128,8 +143,8 @@ def extract_payment_method(text):
 
 def extract_receipt_number(text):
     patterns = [
-        r"(?:RECEIPT|TRANS(?:ACTION)?|REF(?:ERENCE)?|ORDER|CHECK|TICKET)\s*[#:No.]*\s*([A-Z0-9\-]{4,})",
-        r"(?:RECEIPT\s*(?:NO|NUMBER|#))\s*[:\-]?\s*([A-Z0-9\-]{4,})",
+        r"(?:TRANS(?:ACTION)?|RECEIPT|ORDER|CHECK|TICKET)\s*(?:ID|NO|NUMBER|#)?\s*[:\-]?\s*([A-Z0-9\-]{4,})",
+        r"(?:REF(?:ERENCE)?)\s*(?:ID|NO|NUMBER|#)?\s*[:\-]?\s*([A-Z0-9\-]{4,})",
     ]
     for pattern in patterns:
         m = re.search(pattern, text, re.IGNORECASE)
@@ -141,8 +156,8 @@ def extract_receipt_number(text):
 def extract_items(text):
     """
     Extract purchased line items from receipt text.
-    Looks for lines that have a description followed by a price,
-    skips totals, taxes, subtotals, and other non-item lines.
+    Handles both single-line (name + price on same line) and
+    multi-line (name on one line, price on the next) receipt formats.
     Returns a list of (item_name, item_price) tuples.
     """
     lines = [l.strip() for l in text.split("\n") if l.strip()]
@@ -152,30 +167,72 @@ def extract_items(text):
         "CREDIT", "DEBIT", "VISA", "MASTERCARD", "CARD", "DUE",
         "AMOUNT", "PAYMENT", "THANK", "SAVE", "DISCOUNT", "COUPON",
         "MEMBER", "REWARD", "POINT", "RECEIPT", "STORE", "TEL",
-        "ADDRESS", "PHONE", "WWW", "HTTP", "APPROVED", "AUTH"
+        "ADDRESS", "PHONE", "WWW", "HTTP", "APPROVED", "AUTH",
+        "CASHIER", "REGISTER", "PHONE", "SAVED", "SAVING", "PRICE",
+        "ITEM NAME", "QTY",
     ]
 
     money_pattern = r"\d[\d,]*\.\d{2}"
+
+    def _is_skip(line):
+        upper = line.upper()
+        return any(k in upper for k in skip_keywords)
+
+    def _is_name_line(line):
+        """True if the line looks like an item name (has text, no price, not a header)."""
+        if re.search(money_pattern, line):
+            return False
+        if _is_skip(line):
+            return False
+        # Must have meaningful alphabetic content
+        if not re.search(r"[A-Za-z]{3,}", line):
+            return False
+        # Filter pure noise lines
+        alnum = sum(c.isalnum() or c == " " for c in line)
+        if alnum / max(len(line), 1) < 0.4:
+            return False
+        # Strip leading item number to check remaining name length
+        name = re.sub(r"^\d+\s+", "", line).strip()
+        return len(name) >= 3
+
+    def _clean_name(line):
+        """Strip leading item numbers and trailing N/S flags."""
+        name = re.sub(money_pattern, "", line)
+        name = re.sub(r"^\d+\s+", "", name)       # remove leading item number
+        name = re.sub(r"\s+[NS]\s*$", "", name)   # remove trailing tax flag
+        name = name.strip(" .-@#*/\\")
+        return name
+
     items = []
 
-    for line in lines:
+    for i, line in enumerate(lines):
         upper = line.upper()
 
-        # Must contain a price to be a line item
         price_match = re.search(money_pattern, line)
         if not price_match:
             continue
 
-        # Skip known non-item lines
-        if any(k in upper for k in skip_keywords):
+        if _is_skip(line):
             continue
 
-        # Skip lines that are only a number/price
-        name = re.sub(money_pattern, "", line).strip(" .-@#*/\\")
+        # Use the last price on the line (most likely the item total)
+        all_prices = re.findall(money_pattern, line)
+        price = all_prices[-1]
+
+        # Try to extract name from this line
+        name = _clean_name(line)
+
+        # If name is too short or looks like just qty/price codes,
+        # look at the previous line for the actual item name
+        if len(name) < 3 and i > 0:
+            prev = lines[i - 1]
+            if _is_name_line(prev):
+                name = re.sub(r"^\d+\s+", "", prev).strip()
+
         if len(name) < 2:
             continue
 
-        items.append((name, price_match.group(0)))
+        items.append((name, price))
 
     return items if items else []
 
