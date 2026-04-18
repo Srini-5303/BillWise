@@ -44,6 +44,9 @@ CONFIG = {
     ),
     "unresolved_log":     os.path.join(_ROOT, "logs", "unresolved_items.json"),
     "low_confidence_log": os.path.join(_ROOT, "logs", "low_confidence_items.json"),
+    "human_review_log":   os.path.join(_ROOT, "logs", "human_review_items.json"),
+    "gemini_model":       "gemini-2.0-flash-lite",
+    "gemini_api_key":     os.environ.get("GEMINI_API_KEY"),
     "labels": [
         "Bakery & Flour", "Beverages", "Dairy", "Frozen / Processed",
         "Fruits", "Grains & Staples", "Herbs", "Meat", "Oils & Fats",
@@ -109,29 +112,43 @@ def init():
 def categorize(item_name: str) -> str:
     """
     Return the predicted grocery category for item_name.
-    Returns '' if the model was not loaded (app still works, column stays blank).
+
+    Return values:
+      - A category string (e.g. "Poultry") when confidence is sufficient.
+      - "HUMAN_REVIEW_NEEDED" when neither DistilBERT nor Gemini could classify
+        the item with enough confidence.  The item is also written to the human
+        review log for future dashboard surfacing.
+      - '' if the model was not loaded at startup (column stays blank in CSV).
     """
     if not _state["ready"]:
         return ""
 
     try:
-        from Categorization import run_inference
+        from Categorization import run_inference, HUMAN_REVIEW_NEEDED
         result = run_inference(
             item_name,
             _state["model"],
             _state["tokenizer"],
             _state["device"],
-            None, None, None,   # inventory/vectorizer/tfidf_matrix unused in run_inference
+            None, None, None,   # inventory/vectorizer/tfidf_matrix not used by classifier
             CONFIG,
         )
+
+        if result["needs_human_review"]:
+            final = HUMAN_REVIEW_NEEDED
+        else:
+            final = result["final_label"]
+
         logging.getLogger("categorizer").info(
-            "%-40s → %-25s (confidence=%.4f, routing=%s)",
+            "%-40s → %-25s (distilbert=%.4f, routing=%s, llm_used=%s, human_review=%s)",
             repr(item_name),
-            result["predicted_label"],
+            final,
             result["confidence"],
             result["routing"],
+            result["llm_used"],
+            result["needs_human_review"],
         )
-        return result["predicted_label"]
+        return final
     except Exception as e:
         logging.error(f"Categorizer: error on '{item_name}' — {e}")
         return ""
