@@ -1,0 +1,495 @@
+/* BillWise Dashboard — shared styles */
+:root {
+  --primary:  #d97706;
+  --primary-dark: #92400e;
+  --bg:       #f9f8f6;
+  --sidebar-bg: #1c1917;
+  --sidebar-text: #d6d3d1;
+  --sidebar-active: #d97706;
+  --surface:  #ffffff;
+  --muted:    #78716c;
+  --border:   #e7e5e4;
+  --success:  #059669;
+  --danger:   #dc2626;
+  --warning:  #f59e0b;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: #1c1917;
+  font-size: 14px;
+}
+
+/* ── Sidebar ──────────────────────────────────────────────────────────────── */
+.bw-sidebar {
+  width: 220px;
+  min-height: 100vh;
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 100;
+}
+
+.bw-logo {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid #292524;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+
+.bw-logo span { color: var(--primary); }
+
+.bw-nav { padding: 12px 0; flex: 1; }
+
+.bw-nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 20px;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 500;
+  border-left: 3px solid transparent;
+  transition: background .15s, color .15s;
+}
+
+.bw-nav a:hover {
+  background: rgba(255,255,255,.06);
+  color: #fff;
+}
+
+.bw-nav a.active {
+  color: #fff;
+  background: rgba(217,119,6,.15);
+  border-left-color: var(--primary);
+}
+
+.bw-nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+.bw-sidebar-footer {
+  padding: 12px 20px;
+  font-size: 11px;
+  color: #57534e;
+  border-top: 1px solid #292524;
+}
+
+/* ── Main layout ──────────────────────────────────────────────────────────── */
+.bw-main {
+  margin-left: 220px;
+  min-height: 100vh;
+  padding: 28px 32px;
+}
+
+.bw-page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1c1917;
+  margin: 0 0 20px;
+}
+
+/* ── Cards ────────────────────────────────────────────────────────────────── */
+.bw-card {
+  background: var(--surface);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.bw-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--muted);
+  margin: 0 0 12px;
+}
+
+/* ── KPI metrics ──────────────────────────────────────────────────────────── */
+.bw-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.bw-kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+
+.bw-kpi-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.bw-kpi-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1c1917;
+  line-height: 1;
+}
+
+.bw-kpi-delta {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.bw-kpi-delta.up   { color: var(--success); }
+.bw-kpi-delta.down { color: var(--danger); }
+
+/* ── Tables ───────────────────────────────────────────────────────────────── */
+.bw-table-wrap { overflow-x: auto; }
+
+.bw-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.bw-table th {
+  text-align: left;
+  padding: 8px 12px;
+  background: #f5f4f2;
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  white-space: nowrap;
+}
+
+.bw-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid #f0ede8;
+  vertical-align: middle;
+}
+
+.bw-table tr:last-child td { border-bottom: none; }
+
+.bw-table tr:hover td { background: #faf9f7; cursor: pointer; }
+
+/* ── Confidence badge ─────────────────────────────────────────────────────── */
+.bw-conf {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.bw-conf.high   { background: #d1fae5; color: #065f46; }
+.bw-conf.medium { background: #fef3c7; color: #92400e; }
+.bw-conf.low    { background: #fee2e2; color: #991b1b; }
+
+/* ── Filters row ──────────────────────────────────────────────────────────── */
+.bw-filters {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.bw-filters select,
+.bw-filters input[type=range],
+.bw-filters input[type=text] {
+  font-family: inherit;
+  font-size: 13px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: #1c1917;
+}
+
+.bw-filters label { font-size: 13px; color: var(--muted); font-weight: 500; }
+
+.bw-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity .15s;
+}
+
+.bw-btn:hover { opacity: .85; }
+.bw-btn-primary { background: var(--primary); color: #fff; }
+.bw-btn-outline { background: transparent; color: var(--primary); border-color: var(--primary); }
+
+/* ── Chart placeholder ────────────────────────────────────────────────────── */
+.bw-chart { min-height: 280px; }
+
+/* ── Alert strip ──────────────────────────────────────────────────────────── */
+.bw-alert {
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.bw-alert-warn   { background: #fef3c7; border-left: 3px solid var(--warning); }
+.bw-alert-danger { background: #fee2e2; border-left: 3px solid var(--danger); }
+.bw-alert-info   { background: #eff6ff; border-left: 3px solid #2563eb; }
+
+/* ── Ask BillWise page ────────────────────────────────────────────────────── */
+.bw-ask-box {
+  max-width: 780px;
+}
+
+.bw-ask-input-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.bw-ask-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color .15s;
+}
+
+.bw-ask-input:focus { border-color: var(--primary); }
+
+.bw-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.bw-chip {
+  padding: 5px 12px;
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+  border-radius: 999px;
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: background .15s;
+}
+
+.bw-chip:hover { background: #fde68a; }
+
+.bw-answer-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 12px;
+}
+
+.bw-answer-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1c1917;
+  margin-bottom: 14px;
+}
+
+.bw-sql-toggle {
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  margin-top: 10px;
+  display: inline-block;
+}
+
+.bw-sql-block {
+  background: #f5f4f2;
+  border-radius: 6px;
+  padding: 12px;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 12px;
+  color: #374151;
+  margin-top: 6px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.bw-spinner {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  padding: 10px 0;
+}
+
+.bw-spinner.active { display: flex; }
+
+/* ── Validation page ──────────────────────────────────────────────────────── */
+.bw-item-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.bw-item-text { flex: 1; min-width: 160px; }
+.bw-item-raw  { font-weight: 600; font-size: 13.5px; }
+.bw-item-cat  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+.bw-item-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.bw-item-controls select,
+.bw-item-controls input {
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font-size: 12.5px;
+  font-family: inherit;
+}
+
+/* ── Two-column grid ──────────────────────────────────────────────────────── */
+.bw-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+/* ── Tabs ─────────────────────────────────────────────────────────────────── */
+.bw-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 20px;
+}
+
+.bw-tab {
+  padding: 9px 18px;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  color: var(--muted);
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.bw-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  font-weight: 600;
+}
+
+.bw-tab-pane { display: none; }
+.bw-tab-pane.active { display: block; }
+
+/* ── Loading overlay ──────────────────────────────────────────────────────── */
+#bw-loading-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(249,248,246,.7);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--muted);
+  gap: 10px;
+}
+
+#bw-loading-overlay.active { display: flex; }
+
+/* ── Validation card sub-classes ─────────────────────────────────────────── */
+.bw-item-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.bw-item-name {
+  font-weight: 600;
+  font-size: 13.5px;
+}
+
+.bw-item-meta {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.bw-item-card-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.bw-item-card-form select,
+.bw-item-card-form input {
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font-size: 12.5px;
+  font-family: inherit;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.bw-top3 {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Tab count badge */
+.bw-badge {
+  display: inline-block;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 7px;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+/* Receipt items table inside drilldown */
+.items-container table { margin: 0; }
+
+@media (max-width: 900px) {
+  .bw-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .bw-grid-2   { grid-template-columns: 1fr; }
+}

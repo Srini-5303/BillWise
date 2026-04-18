@@ -28,3 +28,4 @@ matplotlib
 pytest
 groq
 python-dotenv
+google-genai>=0.5.0

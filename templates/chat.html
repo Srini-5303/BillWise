@@ -1,94 +1,121 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BillWise Assistant</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/chat.css" />
-</head>
-<body>
+{% extends "base_dashboard.html" %}
+{% block title %} — Ask BillWise{% endblock %}
 
-  <div id="app">
+{% block content %}
+<h1 class="bw-page-title">Ask BillWise</h1>
+<p style="color:var(--muted);margin-bottom:20px">Ask any question about your receipts in plain English.</p>
 
-    <!-- Header -->
-    <header>
-      <div class="header-inner">
-        <div class="header-left">
-          <div class="header-logo">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
-              <rect x="9" y="3" width="6" height="4" rx="1"/>
-              <line x1="9" y1="12" x2="15" y2="12"/>
-              <line x1="9" y1="16" x2="13" y2="16"/>
-            </svg>
-          </div>
-          <span class="header-title">BillWise</span>
-        </div>
-        <div class="header-actions">
-          <button id="btn-reload" title="Reload data from storage">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="23 4 23 10 17 10"/>
-              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-            </svg>
-            Reload
-          </button>
-          <button id="btn-reset" title="Clear conversation">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="3 6 5 6 21 6"/>
-              <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/>
-            </svg>
-            New chat
-          </button>
-        </div>
-      </div>
-    </header>
+<!-- Question input -->
+<div class="bw-ask-box">
+  <textarea id="question-input" placeholder="e.g. What did I spend on groceries last month?" rows="2"
+    onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();askQuestion()}"
+  ></textarea>
+  <button class="bw-btn bw-btn-primary" onclick="askQuestion()" id="ask-btn">Ask</button>
+</div>
 
-    <!-- Message thread -->
-    <main id="messages">
-      <div class="message assistant">
-        <div class="avatar bw-avatar">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
-            <rect x="9" y="3" width="6" height="4" rx="1"/>
-            <line x1="9" y1="12" x2="15" y2="12"/>
-            <line x1="9" y1="16" x2="13" y2="16"/>
-          </svg>
-        </div>
-        <div class="message-body">
-          <div class="message-content">
-            Hi! I can answer questions about your bills and spending.<br><br>
-            Try asking: <em>"How much did I spend last month?"</em> or <em>"Which store do I visit most?"</em>
-          </div>
-        </div>
-      </div>
-    </main>
+<!-- Example chips -->
+<div class="bw-chips">
+  <span class="bw-chip" onclick="setQuestion(this)">Total spend by category</span>
+  <span class="bw-chip" onclick="setQuestion(this)">Which vendor did I spend the most at?</span>
+  <span class="bw-chip" onclick="setQuestion(this)">Show my top 10 most purchased items</span>
+  <span class="bw-chip" onclick="setQuestion(this)">Monthly spend trend</span>
+  <span class="bw-chip" onclick="setQuestion(this)">Receipts over $50</span>
+  <span class="bw-chip" onclick="setQuestion(this)">Average bill amount per vendor</span>
+</div>
 
-    <!-- Input area -->
-    <footer id="input-bar">
-      <div class="input-container">
-        <div class="input-wrapper">
-          <textarea
-            id="input"
-            rows="1"
-            placeholder="Ask anything about your bills…"
-            autofocus
-          ></textarea>
-          <button id="btn-send" title="Send (Enter)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <line x1="12" y1="19" x2="12" y2="5"/>
-              <polyline points="5 12 12 5 19 12"/>
-            </svg>
-          </button>
-        </div>
-        <p class="input-hint">Enter to send &nbsp;·&nbsp; Shift+Enter for newline</p>
-      </div>
-    </footer>
-
+<!-- Answer card (hidden until a question is asked) -->
+<div class="bw-answer-card" id="answer-card" style="display:none">
+  <div class="bw-answer-header">
+    <span class="bw-answer-icon">💡</span>
+    <span id="answer-text"></span>
   </div>
 
-  <script src="/static/chat.js"></script>
-</body>
-</html>
+  <div id="answer-chart-wrap" style="display:none;margin-top:16px">
+    <div id="answer-chart" class="bw-chart"></div>
+  </div>
+
+  <div id="answer-table-wrap" style="display:none;margin-top:16px">
+    <div class="bw-table-wrap">
+      <table class="bw-table" id="answer-table">
+        <thead id="answer-thead"></thead>
+        <tbody id="answer-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <details id="answer-sql-wrap" style="display:none;margin-top:12px">
+    <summary style="cursor:pointer;font-size:12px;color:var(--muted)">View generated SQL</summary>
+    <pre id="answer-sql" style="font-size:11px;background:var(--surface);padding:10px;border-radius:6px;overflow-x:auto;margin-top:6px"></pre>
+  </details>
+
+  <div id="answer-error" style="display:none;color:var(--danger);margin-top:8px;font-size:14px"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function setQuestion(el) {
+    document.getElementById('question-input').value = el.textContent;
+    document.getElementById('question-input').focus();
+  }
+
+  async function askQuestion() {
+    const input = document.getElementById('question-input');
+    const question = input.value.trim();
+    if (!question) return;
+
+    const btn = document.getElementById('ask-btn');
+    btn.disabled = true;
+    bwLoading(true);
+
+    // Reset answer card
+    document.getElementById('answer-card').style.display = 'none';
+    document.getElementById('answer-chart-wrap').style.display = 'none';
+    document.getElementById('answer-table-wrap').style.display = 'none';
+    document.getElementById('answer-sql-wrap').style.display = 'none';
+    document.getElementById('answer-error').style.display = 'none';
+
+    try {
+      const data = await bwFetch('/api/ask', { question });
+
+      document.getElementById('answer-card').style.display = 'block';
+      document.getElementById('answer-text').textContent = data.answer || '';
+
+      if (data.error) {
+        const errEl = document.getElementById('answer-error');
+        errEl.textContent = data.error;
+        errEl.style.display = 'block';
+      }
+
+      if (data.chart_json) {
+        document.getElementById('answer-chart-wrap').style.display = 'block';
+        bwChart('answer-chart', data.chart_json);
+      }
+
+      if (data.table && data.table.length) {
+        const keys = Object.keys(data.table[0]);
+        document.getElementById('answer-thead').innerHTML =
+          '<tr>' + keys.map(k => `<th>${k}</th>`).join('') + '</tr>';
+        document.getElementById('answer-tbody').innerHTML =
+          data.table.map(row =>
+            '<tr>' + keys.map(k => `<td>${row[k] != null ? row[k] : '—'}</td>`).join('') + '</tr>'
+          ).join('');
+        document.getElementById('answer-table-wrap').style.display = 'block';
+      }
+
+      if (data.sql) {
+        document.getElementById('answer-sql').textContent = data.sql;
+        document.getElementById('answer-sql-wrap').style.display = 'block';
+      }
+    } catch(e) {
+      document.getElementById('answer-card').style.display = 'block';
+      const errEl = document.getElementById('answer-error');
+      errEl.textContent = 'Request failed. Please try again.';
+      errEl.style.display = 'block';
+    } finally {
+      btn.disabled = false;
+      bwLoading(false);
+    }
+  }
+</script>
+{% endblock %}

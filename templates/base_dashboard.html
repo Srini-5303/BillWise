@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BillWise{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}" />
+</head>
+<body>
+<!-- Loading overlay -->
+<div id="bw-loading-overlay">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.5" stroke-linecap="round" style="animation:spin 1s linear infinite">
+    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+  </svg>
+  Loading…
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
+<div style="display:flex">
+  <!-- Sidebar -->
+  <nav class="bw-sidebar">
+    <div class="bw-logo">🧾 Bill<span>Wise</span></div>
+    <div class="bw-nav">
+      <a href="{{ url_for('analytics.overview') }}"    class="{{ 'active' if active=='overview' }}">
+        <span class="bw-nav-icon">📊</span> Overview</a>
+      <a href="{{ url_for('analytics.categories') }}"  class="{{ 'active' if active=='categories' }}">
+        <span class="bw-nav-icon">🏷️</span> Categories</a>
+      <a href="{{ url_for('analytics.vendors') }}"     class="{{ 'active' if active=='vendors' }}">
+        <span class="bw-nav-icon">🏪</span> Vendors</a>
+      <a href="{{ url_for('analytics.items') }}"       class="{{ 'active' if active=='items' }}">
+        <span class="bw-nav-icon">📦</span> Items</a>
+      <a href="{{ url_for('analytics.receipts') }}"    class="{{ 'active' if active=='receipts' }}">
+        <span class="bw-nav-icon">🔍</span> Receipts</a>
+      <a href="{{ url_for('chat_ui') }}"               class="{{ 'active' if active=='chat' }}">
+        <span class="bw-nav-icon">💬</span> Ask BillWise</a>
+      <a href="{{ url_for('analytics.validation') }}"  class="{{ 'active' if active=='validation' }}">
+        <span class="bw-nav-icon">🚨</span> Validation</a>
+    </div>
+    <div class="bw-sidebar-footer">BillWise © 2025</div>
+  </nav>
+
+  <!-- Main content -->
+  <main class="bw-main">
+    {% block content %}{% endblock %}
+  </main>
+</div>
+
+<!-- Plotly.js -->
+<script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+<!-- Dashboard shared JS -->
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

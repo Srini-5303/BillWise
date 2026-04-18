@@ -1,0 +1,248 @@
+{% extends "base_dashboard.html" %}
+{% block title %} — Validation{% endblock %}
+
+{% block content %}
+<h1 class="bw-page-title">Human Validation</h1>
+
+<!-- Tabs -->
+<div class="bw-tabs" style="margin-bottom:0">
+  <button class="bw-tab active" data-tab-group="val" data-tab-target="urgent">
+    Urgent {% if urgent %}<span class="bw-badge">{{ urgent|length }}</span>{% endif %}
+  </button>
+  <button class="bw-tab" data-tab-group="val" data-tab-target="review">
+    Needs Review {% if review %}<span class="bw-badge">{{ review|length }}</span>{% endif %}
+  </button>
+  <button class="bw-tab" data-tab-group="val" data-tab-target="ocr">
+    OCR Issues {% if ocr_issues %}<span class="bw-badge">{{ ocr_issues|length }}</span>{% endif %}
+  </button>
+  <button class="bw-tab" data-tab-group="val" data-tab-target="log">
+    Validation Log
+  </button>
+</div>
+
+<!-- Urgent -->
+<div class="bw-tab-pane active" data-tab-group="val" data-tab-id="urgent">
+  {% if urgent %}
+    {% for item in urgent %}
+    <div class="bw-item-card" id="card-{{ item.id }}"
+         data-id="{{ item.id }}"
+         data-receipt-id="{{ item.receipt_id or '' }}"
+         data-raw-text="{{ item.raw_item_text or '' }}"
+         data-original-cat="{{ item.category or '' }}">
+      <div class="bw-item-card-header">
+        <span class="bw-item-name">{{ item.raw_item_text }}</span>
+        <span class="bw-conf low">Low confidence</span>
+      </div>
+      <div class="bw-item-meta">
+        Normalized: <strong>{{ item.normalized_item_text or '—' }}</strong> &nbsp;·&nbsp;
+        Canonical: <strong>{{ item.matched_canonical_item or '—' }}</strong> &nbsp;·&nbsp;
+        Current: <strong>{{ item.category or 'Uncategorized' }}</strong>
+      </div>
+      {% if item.top3 %}
+      <div class="bw-top3" style="margin-bottom:8px">
+        Suggestions:
+        {% for pred in item.top3 %}
+        <span class="bw-chip" style="font-size:11px" onclick="this.closest('.bw-item-card').querySelector('.cat-select').value='{{ pred.category }}'">
+          {{ pred.category }} ({{ "{:.0%}".format(pred.confidence) }})
+        </span>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <div class="bw-item-card-form">
+        <select class="cat-select" style="flex:1">
+          {% for cat in category_list %}
+          <option value="{{ cat }}" {{ 'selected' if cat == item.category }}>{{ cat }}</option>
+          {% endfor %}
+        </select>
+        <input type="text" class="note-input" placeholder="Note (optional)" style="flex:1" />
+        <button class="bw-btn bw-btn-primary" onclick="saveCategory(this)">Save</button>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="bw-card"><p style="color:var(--muted)">No urgent items.</p></div>
+  {% endif %}
+</div>
+
+<!-- Needs Review -->
+<div class="bw-tab-pane" data-tab-group="val" data-tab-id="review">
+  {% if review %}
+    {% for item in review %}
+    <div class="bw-item-card" id="card-{{ item.id }}"
+         data-id="{{ item.id }}"
+         data-receipt-id="{{ item.receipt_id or '' }}"
+         data-raw-text="{{ item.raw_item_text or '' }}"
+         data-original-cat="{{ item.category or '' }}">
+      <div class="bw-item-card-header">
+        <span class="bw-item-name">{{ item.raw_item_text }}</span>
+        <span class="bw-conf medium">Review</span>
+      </div>
+      <div class="bw-item-meta">
+        Normalized: <strong>{{ item.normalized_item_text or '—' }}</strong> &nbsp;·&nbsp;
+        Category: <strong>{{ item.category or 'Uncategorized' }}</strong>
+      </div>
+      {% if item.top3 %}
+      <div class="bw-top3" style="margin-bottom:8px">
+        Suggestions:
+        {% for pred in item.top3 %}
+        <span class="bw-chip" style="font-size:11px" onclick="this.closest('.bw-item-card').querySelector('.cat-select').value='{{ pred.category }}'">
+          {{ pred.category }} ({{ "{:.0%}".format(pred.confidence) }})
+        </span>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <div class="bw-item-card-form">
+        <select class="cat-select" style="flex:1">
+          {% for cat in category_list %}
+          <option value="{{ cat }}" {{ 'selected' if cat == item.category }}>{{ cat }}</option>
+          {% endfor %}
+        </select>
+        <input type="text" class="note-input" placeholder="Note (optional)" style="flex:1" />
+        <button class="bw-btn bw-btn-primary" onclick="saveCategory(this)">Save</button>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="bw-card"><p style="color:var(--muted)">No items needing review.</p></div>
+  {% endif %}
+</div>
+
+<!-- OCR Issues -->
+<div class="bw-tab-pane" data-tab-group="val" data-tab-id="ocr">
+  {% if ocr_issues %}
+    {% for issue in ocr_issues %}
+    <div class="bw-item-card" id="ocr-card-{{ issue.receipt_id }}"
+         data-receipt-id="{{ issue.receipt_id or '' }}"
+         data-original="{{ issue.vendor_name or '' }}">
+      <div class="bw-item-card-header">
+        <span class="bw-item-name">{{ issue.issues }}</span>
+        <span class="bw-conf low">OCR Issue</span>
+      </div>
+      <div class="bw-item-meta">
+        Vendor: <strong>{{ issue.vendor_name or '—' }}</strong> &nbsp;·&nbsp;
+        Date: <strong>{{ issue.receipt_date or '—' }}</strong> &nbsp;·&nbsp;
+        Total: <strong>${{ "{:,.2f}".format(issue.receipt_total or 0) }}</strong>
+      </div>
+      <div class="bw-item-card-form">
+        <input type="text" class="ocr-corrected" placeholder="Corrected vendor name" style="flex:2"
+               value="{{ issue.vendor_name or '' }}" />
+        <button class="bw-btn bw-btn-primary" onclick="saveOcr(this)">Save</button>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="bw-card"><p style="color:var(--muted)">No OCR issues flagged.</p></div>
+  {% endif %}
+</div>
+
+<!-- Validation Log -->
+<div class="bw-tab-pane" data-tab-group="val" data-tab-id="log">
+  <div class="bw-card" style="margin-top:0">
+    {% if val_log %}
+    <div class="bw-card-title">Category Corrections</div>
+    <div class="bw-table-wrap">
+      <table class="bw-table">
+        <thead><tr><th>Item</th><th>Old Category</th><th>New Category</th><th>Note</th><th>Validated At</th></tr></thead>
+        <tbody>
+        {% for r in val_log %}
+        <tr>
+          <td>{{ r.raw_item_text }}</td>
+          <td>{{ r.original_category or '—' }}</td>
+          <td>{{ r.validated_category }}</td>
+          <td>{{ r.validator_note or '—' }}</td>
+          <td>{{ r.validated_at }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p style="color:var(--muted)">No category corrections yet.</p>
+    {% endif %}
+
+    {% if ocr_log %}
+    <div class="bw-card-title" style="margin-top:24px">OCR Corrections</div>
+    <div class="bw-table-wrap">
+      <table class="bw-table">
+        <thead><tr><th>Receipt ID</th><th>Original</th><th>Corrected</th><th>Corrected At</th></tr></thead>
+        <tbody>
+        {% for r in ocr_log %}
+        <tr>
+          <td>{{ r.receipt_id }}</td>
+          <td><code style="font-size:11px">{{ r.original_value }}</code></td>
+          <td>{{ r.corrected_value }}</td>
+          <td>{{ r.corrected_at }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p style="color:var(--muted);margin-top:12px">No OCR corrections yet.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  async function saveCategory(btn) {
+    const card = btn.closest('.bw-item-card');
+    const payload = {
+      id:                parseInt(card.dataset.id) || 0,
+      receipt_id:        card.dataset.receiptId || '',
+      raw_item_text:     card.dataset.rawText || '',
+      original_category: card.dataset.originalCat || '',
+      category:          card.querySelector('.cat-select').value,
+      note:              card.querySelector('.note-input').value,
+    };
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+    try {
+      const data = await bwFetch('/api/validation/category', payload);
+      if (data.success) {
+        card.style.transition = 'opacity 0.3s';
+        card.style.opacity = '0';
+        setTimeout(() => card.remove(), 300);
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'Save';
+        alert('Save failed: ' + (data.error || 'unknown error'));
+      }
+    } catch(e) {
+      btn.disabled = false;
+      btn.textContent = 'Save';
+      alert('Request failed.');
+    }
+  }
+
+  async function saveOcr(btn) {
+    const card      = btn.closest('.bw-item-card');
+    const corrected = card.querySelector('.ocr-corrected').value.trim();
+    if (!corrected) { alert('Enter corrected text.'); return; }
+    const payload = {
+      receipt_id:     card.dataset.receiptId || '',
+      original_value: card.dataset.original || '',
+      corrected_text: corrected,
+    };
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+    try {
+      const data = await bwFetch('/api/validation/ocr', payload);
+      if (data.success) {
+        card.style.transition = 'opacity 0.3s';
+        card.style.opacity = '0';
+        setTimeout(() => card.remove(), 300);
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'Save';
+        alert('Save failed: ' + (data.error || 'unknown error'));
+      }
+    } catch(e) {
+      btn.disabled = false;
+      btn.textContent = 'Save';
+      alert('Request failed.');
+    }
+  }
+</script>
+{% endblock %}

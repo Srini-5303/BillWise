@@ -1,0 +1,123 @@
+{% extends "base_dashboard.html" %}
+{% block title %} — Items{% endblock %}
+
+{% block content %}
+<h1 class="bw-page-title">Items</h1>
+
+<div class="bw-filters">
+  <label>Date:</label>
+  <select id="f-date">
+    {% for opt in date_range_options %}
+    <option value="{{ opt }}" {{ 'selected' if opt == date_range }}>{{ opt }}</option>
+    {% endfor %}
+  </select>
+  <label>Rank by:</label>
+  <select id="f-metric">
+    <option value="spend"    {{ 'selected' if metric == 'spend' }}>Spend</option>
+    <option value="quantity" {{ 'selected' if metric == 'quantity' }}>Quantity</option>
+  </select>
+  <input type="text" id="f-search" placeholder="Search items…" style="width:180px"
+         oninput="filterTable(this.value)" />
+  <button class="bw-btn bw-btn-primary" onclick="applyFilters()">Apply</button>
+</div>
+
+<div class="bw-card">
+  <div class="bw-card-title">Top Items</div>
+  <div id="chart-bar" class="bw-chart"></div>
+</div>
+
+<!-- Item trend -->
+<div class="bw-card">
+  <div class="bw-card-title">Item Monthly Trend</div>
+  <div class="bw-filters" style="margin-bottom:12px">
+    <label>Item:</label>
+    <select id="f-item" onchange="loadTrend(this.value)">
+      <option value="">— select item —</option>
+      {% for item in all_items %}
+      <option value="{{ item }}">{{ item }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div id="chart-trend" class="bw-chart" style="min-height:80px"></div>
+</div>
+
+<!-- Top items table -->
+<div class="bw-card">
+  <div class="bw-card-title">Top Items Table</div>
+  <div class="bw-table-wrap">
+    <table class="bw-table" id="items-table">
+      <thead><tr><th>Item</th><th>Category</th><th>Spend</th><th>Quantity</th><th>Receipts</th></tr></thead>
+      <tbody>
+      {% for r in top_table %}
+      <tr data-item="{{ r.matched_canonical_item | lower }}">
+        <td>{{ r.matched_canonical_item }}</td>
+        <td>{{ r.category }}</td>
+        <td>${{ "{:,.2f}".format(r.spend) }}</td>
+        <td>{{ "{:,.1f}".format(r.quantity) }}</td>
+        <td>{{ r.frequency }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Raw vs normalised -->
+<div class="bw-card">
+  <div class="bw-card-title">Raw OCR vs Normalized</div>
+  <div class="bw-table-wrap">
+    <table class="bw-table">
+      <thead><tr><th>Raw OCR Text</th><th>Normalized</th><th>Canonical</th><th>Category</th><th>Confidence</th></tr></thead>
+      <tbody>
+      {% for r in raw_table %}
+      <tr>
+        <td><code style="font-size:11px">{{ r.raw_item_text }}</code></td>
+        <td>{{ r.normalized_item_text }}</td>
+        <td>{{ r.matched_canonical_item }}</td>
+        <td>{{ r.category }}</td>
+        <td>
+          {% set conf = r.category_confidence or 0 %}
+          {% if conf >= 0.9 %}<span class="bw-conf high">{{ "{:.0%}".format(conf) }}</span>
+          {% elif conf >= 0.7 %}<span class="bw-conf medium">{{ "{:.0%}".format(conf) }}</span>
+          {% else %}<span class="bw-conf low">{{ "{:.0%}".format(conf) }}</span>{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  bwChart('chart-bar', {{ bar_json | safe }});
+
+  function filterTable(query) {
+    const q = query.toLowerCase();
+    document.querySelectorAll('#items-table tbody tr').forEach(tr => {
+      tr.style.display = tr.dataset.item.includes(q) ? '' : 'none';
+    });
+  }
+
+  async function applyFilters() {
+    const date   = document.getElementById('f-date').value;
+    const metric = document.getElementById('f-metric').value;
+    bwLoading(true);
+    try {
+      const data = await bwFetch('/api/analytics/items', { date_range: date, metric });
+      bwChart('chart-bar', data.bar_json);
+    } finally { bwLoading(false); }
+  }
+
+  async function loadTrend(item) {
+    if (!item) return;
+    const date = document.getElementById('f-date').value;
+    bwLoading(true);
+    try {
+      const data = await bwFetch('/api/analytics/items', { date_range: date, metric: 'spend', item });
+      if (data.trend_json) bwChart('chart-trend', data.trend_json);
+    } finally { bwLoading(false); }
+  }
+</script>
+{% endblock %}

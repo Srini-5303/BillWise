@@ -3,11 +3,14 @@ sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 
 import os
+from dotenv import load_dotenv
+load_dotenv()
+
 import logging
 import hashlib
 import tempfile
 import requests
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template, jsonify, redirect, url_for
 from twilio.rest import Client
 from twilio.twiml.messaging_response import MessagingResponse
 
@@ -15,6 +18,7 @@ from ocr_pipeline import process_image
 from csv_writer import append_bill, is_duplicate
 from chatbot import handle_chat_message, reload_session, clear_session
 import categorizer
+from analytics_routes import analytics_bp, invalidate_cache
 
 # ── Logging configuration ─────────────────────────────────────────────────────
 logging.basicConfig(
@@ -25,6 +29,7 @@ logging.basicConfig(
 log = logging.getLogger("app")
 
 app = Flask(__name__)
+app.register_blueprint(analytics_bp)
 
 # Load DistilBERT model once at startup
 categorizer.init()
@@ -189,6 +194,8 @@ def webhook():
 
             # Reload cached CSV for this sender so next query sees new bill
             reload_session(sender)
+            # Invalidate analytics cache so dashboard reflects the new bill
+            invalidate_cache()
 
             reply_parts.append(
                 f"✅ *Bill #{serial} Saved*\n"
@@ -214,7 +221,7 @@ def webhook():
 
 @app.route("/chat")
 def chat_ui():
-    return render_template("chat.html")
+    return render_template("chat.html", active="chat")
 
 
 # ── REST API ───────────────────────────────────────────────────────────────────
@@ -266,6 +273,11 @@ def api_reload():
 
 @app.route("/", methods=["GET"])
 def health():
+    return redirect(url_for("analytics.overview"))
+
+
+@app.route("/health", methods=["GET"])
+def health_check():
     return "Bill Bot is running ✅", 200
 
 

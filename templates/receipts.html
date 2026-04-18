@@ -1,0 +1,167 @@
+{% extends "base_dashboard.html" %}
+{% block title %} — Receipts{% endblock %}
+
+{% block content %}
+<h1 class="bw-page-title">Receipt Explorer</h1>
+
+<div class="bw-filters">
+  <label>Date:</label>
+  <select id="f-date">
+    {% for opt in date_range_options %}
+    <option value="{{ opt }}" {{ 'selected' if opt == date_range }}>{{ opt }}</option>
+    {% endfor %}
+  </select>
+  <label>Vendor:</label>
+  <select id="f-vendor">
+    {% for v in all_vendors %}
+    <option value="{{ v }}" {{ 'selected' if v == vendor }}>{{ v }}</option>
+    {% endfor %}
+  </select>
+  <label>Min Confidence:</label>
+  <input type="range" id="f-conf" min="0" max="1" step="0.05"
+         value="{{ min_conf }}" style="width:100px" oninput="document.getElementById('conf-val').textContent=parseFloat(this.value).toFixed(0)+'%'" />
+  <span id="conf-val">{{ "{:.0%}".format(min_conf) }}</span>
+  <button class="bw-btn bw-btn-primary" onclick="applyFilters()">Apply</button>
+</div>
+
+<!-- Spend distribution -->
+<div class="bw-card">
+  <div class="bw-card-title">Spend Distribution</div>
+  <div id="chart-dist" class="bw-chart"></div>
+</div>
+
+<!-- Alerts -->
+{% if duplicates or high_spend %}
+<div class="bw-grid-2">
+  {% if duplicates %}
+  <div class="bw-card">
+    <div class="bw-card-title">Possible Duplicates</div>
+    {% for d in duplicates %}
+    <div class="bw-alert bw-alert-warn">
+      <strong>{{ d.vendor_name }}</strong> — {{ d.receipt_date }}
+      <span style="float:right">${{ "{:,.2f}".format(d.receipt_total) }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if high_spend %}
+  <div class="bw-card">
+    <div class="bw-card-title">High Spend Alerts</div>
+    {% for h in high_spend %}
+    <div class="bw-alert bw-alert-danger">
+      <strong>{{ h.vendor_name }}</strong> — {{ h.receipt_date }}
+      <span style="float:right">${{ "{:,.2f}".format(h.receipt_total) }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+<!-- Receipts table -->
+<div class="bw-card">
+  <div class="bw-card-title">Receipts</div>
+  <div class="bw-table-wrap">
+    <table class="bw-table" id="receipts-table">
+      <thead><tr>
+        <th>Vendor</th><th>Date</th><th>Total</th><th>Card</th><th>Confidence</th><th>Items</th>
+      </tr></thead>
+      <tbody>
+      {% for r in receipts_table %}
+      <tr class="receipt-row" data-serial="{{ r.serial_no }}" style="cursor:pointer" onclick="toggleItems(this, '{{ r.serial_no }}')">
+        <td>{{ r.vendor_name }}</td>
+        <td>{{ r.receipt_date }}</td>
+        <td>${{ "{:,.2f}".format(r.receipt_total) }}</td>
+        <td>{{ r.card_used or '—' }}</td>
+        <td>
+          {% set conf = r.extraction_confidence or 0 %}
+          {% if conf >= 0.9 %}<span class="bw-conf high">{{ "{:.0%}".format(conf) }}</span>
+          {% elif conf >= 0.7 %}<span class="bw-conf medium">{{ "{:.0%}".format(conf) }}</span>
+          {% else %}<span class="bw-conf low">{{ "{:.0%}".format(conf) }}</span>{% endif %}
+        </td>
+        <td><span class="bw-btn bw-btn-outline" style="padding:2px 8px;font-size:12px">▼ Details</span></td>
+      </tr>
+      <tr class="item-detail-row" id="items-{{ r.serial_no }}" style="display:none">
+        <td colspan="6" style="padding:0">
+          <div class="items-container" style="padding:8px 16px;background:var(--surface)">
+            <em style="color:var(--muted);font-size:13px">Loading…</em>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  bwChart('chart-dist', {{ dist_json | safe }});
+
+  async function applyFilters() {
+    const date   = document.getElementById('f-date').value;
+    const vendor = document.getElementById('f-vendor').value;
+    const conf   = document.getElementById('f-conf').value;
+    bwLoading(true);
+    try {
+      const data = await bwFetch('/api/analytics/receipts', { date_range: date, vendor, min_conf: parseFloat(conf) });
+      bwChart('chart-dist', data.dist_json);
+      const tbody = document.querySelector('#receipts-table tbody');
+      if (data.receipts_table) {
+        tbody.innerHTML = data.receipts_table.map(r => {
+          const conf = r.extraction_confidence || 0;
+          const badge = bwConfBadge(conf);
+          return `<tr class="receipt-row" data-serial="${r.serial_no}" style="cursor:pointer" onclick="toggleItems(this,'${r.serial_no}')">
+            <td>${r.vendor_name||'—'}</td>
+            <td>${r.receipt_date||'—'}</td>
+            <td>$${parseFloat(r.receipt_total||0).toLocaleString(undefined,{minimumFractionDigits:2})}</td>
+            <td>${r.card_used||'—'}</td>
+            <td>${badge}</td>
+            <td><span class="bw-btn bw-btn-outline" style="padding:2px 8px;font-size:12px">▼ Details</span></td>
+          </tr>
+          <tr class="item-detail-row" id="items-${r.serial_no}" style="display:none">
+            <td colspan="6" style="padding:0"><div class="items-container" style="padding:8px 16px;background:var(--surface)"><em style="color:var(--muted);font-size:13px">Loading…</em></div></td>
+          </tr>`;
+        }).join('');
+      }
+    } finally { bwLoading(false); }
+  }
+
+  const _expanded = new Set();
+
+  async function toggleItems(row, serialNo) {
+    const detailRow = document.getElementById('items-' + serialNo);
+    if (!detailRow) return;
+    if (_expanded.has(serialNo)) {
+      detailRow.style.display = 'none';
+      _expanded.delete(serialNo);
+      return;
+    }
+    detailRow.style.display = '';
+    _expanded.add(serialNo);
+    const container = detailRow.querySelector('.items-container');
+    try {
+      const data = await fetch('/api/analytics/receipt/' + serialNo + '/items').then(r => r.json());
+      if (!data.items || !data.items.length) {
+        container.innerHTML = '<em style="color:var(--muted);font-size:13px">No line items found.</em>';
+        return;
+      }
+      container.innerHTML = `<table class="bw-table" style="margin:0">
+        <thead><tr><th>Item</th><th>Normalized</th><th>Canonical</th><th>Category</th><th>Price</th><th>Qty</th></tr></thead>
+        <tbody>` +
+        data.items.map(i => `<tr>
+          <td><code style="font-size:11px">${i.raw_item_text||'—'}</code></td>
+          <td>${i.normalized_item_text||'—'}</td>
+          <td>${i.matched_canonical_item||'—'}</td>
+          <td>${i.category||'—'}</td>
+          <td>${i.item_price != null ? '$'+parseFloat(i.item_price).toFixed(2) : '—'}</td>
+          <td>${i.quantity != null ? i.quantity : '—'}</td>
+        </tr>`).join('') +
+        '</tbody></table>';
+    } catch(e) {
+      container.innerHTML = '<em style="color:var(--danger);font-size:13px">Failed to load items.</em>';
+    }
+  }
+</script>
+{% endblock %}

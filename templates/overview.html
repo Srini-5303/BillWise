@@ -1,0 +1,104 @@
+{% extends "base_dashboard.html" %}
+{% block title %} — Overview{% endblock %}
+
+{% block content %}
+<h1 class="bw-page-title">Overview</h1>
+
+<!-- Date filter -->
+<div class="bw-filters" style="margin-bottom:16px">
+  <label>Date range:</label>
+  <select onchange="location.href='/overview?date_range='+this.value">
+    {% for opt in date_range_options %}
+    <option value="{{ opt }}" {{ 'selected' if opt == date_range }}>{{ opt }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+<!-- KPIs -->
+<div class="bw-kpi-grid">
+  <div class="bw-kpi">
+    <div class="bw-kpi-label">Total Spend</div>
+    <div class="bw-kpi-value">${{ "{:,.0f}".format(kpis.total_spend) }}</div>
+    {% if kpis.spend_delta_pct is not none %}
+    <div class="bw-kpi-delta {{ 'down' if kpis.spend_delta_pct > 0 else 'up' }}">
+      {{ '+' if kpis.spend_delta_pct > 0 else '' }}{{ kpis.spend_delta_pct }}% vs prev period
+    </div>
+    {% endif %}
+  </div>
+  <div class="bw-kpi">
+    <div class="bw-kpi-label">Receipts</div>
+    <div class="bw-kpi-value">{{ "{:,}".format(kpis.total_receipts) }}</div>
+  </div>
+  <div class="bw-kpi">
+    <div class="bw-kpi-label">Vendors</div>
+    <div class="bw-kpi-value">{{ "{:,}".format(kpis.total_vendors) }}</div>
+  </div>
+  <div class="bw-kpi">
+    <div class="bw-kpi-label">Line Items</div>
+    <div class="bw-kpi-value">{{ "{:,}".format(kpis.total_items) }}</div>
+  </div>
+  <div class="bw-kpi">
+    <div class="bw-kpi-label">Avg Bill</div>
+    <div class="bw-kpi-value">${{ "{:,.2f}".format(kpis.avg_bill) }}</div>
+  </div>
+</div>
+
+<!-- Spend trend chart -->
+<div class="bw-card">
+  <div class="bw-card-title">Spend Over Time (Last 90 Days)</div>
+  <div id="chart-trend" class="bw-chart"></div>
+</div>
+
+<!-- Two-column: recent receipts + anomalies -->
+<div class="bw-grid-2">
+  <div class="bw-card">
+    <div class="bw-card-title">Recent Receipts</div>
+    <div class="bw-table-wrap">
+      {% if recent %}
+      <table class="bw-table">
+        <thead><tr>
+          <th>Vendor</th><th>Date</th><th>Total</th><th>Confidence</th>
+        </tr></thead>
+        <tbody>
+        {% for r in recent %}
+        <tr>
+          <td>{{ r.vendor_name }}</td>
+          <td>{{ r.receipt_date }}</td>
+          <td>${{ "{:,.2f}".format(r.receipt_total) }}</td>
+          <td>
+            {% set conf = r.extraction_confidence or 0 %}
+            {% if conf >= 0.9 %}<span class="bw-conf high">{{ "{:.0%}".format(conf) }}</span>
+            {% elif conf >= 0.7 %}<span class="bw-conf medium">{{ "{:.0%}".format(conf) }}</span>
+            {% else %}<span class="bw-conf low">{{ "{:.0%}".format(conf) }}</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p style="color:var(--muted)">No receipts yet.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="bw-card">
+    <div class="bw-card-title">Anomaly Alerts</div>
+    {% if anomalies %}
+      {% for a in anomalies %}
+      <div class="bw-alert {{ 'bw-alert-warn' if '⚠️' in a.alert_type else 'bw-alert-danger' }}">
+        <strong>{{ a.alert_type }}</strong> — {{ a.vendor_name }}
+        <span style="float:right">${{ "{:,.2f}".format(a.receipt_total) }}</span>
+      </div>
+      {% endfor %}
+    {% else %}
+    <p style="color:var(--muted)">No anomalies detected.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  bwChart('chart-trend', {{ spend_trend_json | safe }});
+</script>
+{% endblock %}

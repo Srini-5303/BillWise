@@ -1,0 +1,94 @@
+{% extends "base_dashboard.html" %}
+{% block title %} — Categories{% endblock %}
+
+{% block content %}
+<h1 class="bw-page-title">Categories</h1>
+
+<div class="bw-filters">
+  <label>Date:</label>
+  <select id="f-date">
+    {% for opt in date_range_options %}
+    <option value="{{ opt }}" {{ 'selected' if opt == date_range }}>{{ opt }}</option>
+    {% endfor %}
+  </select>
+  <label>Metric:</label>
+  <select id="f-metric">
+    <option value="spend"    {{ 'selected' if metric == 'spend' }}>Spend</option>
+    <option value="quantity" {{ 'selected' if metric == 'quantity' }}>Quantity</option>
+  </select>
+  <button class="bw-btn bw-btn-primary" onclick="applyFilters()">Apply</button>
+</div>
+
+<div class="bw-grid-2">
+  <div class="bw-card">
+    <div class="bw-card-title">Spend by Category</div>
+    <div id="chart-donut" class="bw-chart"></div>
+  </div>
+  <div class="bw-card">
+    <div class="bw-card-title">Category Breakdown</div>
+    <div id="chart-bar" class="bw-chart"></div>
+  </div>
+</div>
+
+<!-- Tabs: heatmap / line -->
+<div class="bw-card">
+  <div class="bw-tabs">
+    <button class="bw-tab active" data-tab-group="cat" data-tab-target="heatmap">Monthly Heatmap</button>
+    <button class="bw-tab"        data-tab-group="cat" data-tab-target="line">Trend Lines</button>
+  </div>
+  <div class="bw-tab-pane active" data-tab-group="cat" data-tab-id="heatmap">
+    <div id="chart-heatmap" class="bw-chart"></div>
+  </div>
+  <div class="bw-tab-pane" data-tab-group="cat" data-tab-id="line">
+    <div id="chart-line" class="bw-chart"></div>
+  </div>
+</div>
+
+<!-- Summary table -->
+<div class="bw-card">
+  <div class="bw-card-title">Category Summary</div>
+  <div class="bw-table-wrap" id="cat-table">
+    <table class="bw-table">
+      <thead><tr><th>Category</th><th>Spend</th><th>Quantity</th><th>% of Total</th></tr></thead>
+      <tbody>
+      {% for r in cat_table %}
+      <tr>
+        <td>{{ r.category }}</td>
+        <td>${{ "{:,.2f}".format(r.spend) }}</td>
+        <td>{{ "{:,.1f}".format(r.quantity) }}</td>
+        <td>{{ "{:.1f}".format(r.pct) }}%</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  bwChart('chart-donut',   {{ donut_json   | safe }});
+  bwChart('chart-bar',     {{ bar_json     | safe }});
+  bwChart('chart-heatmap', {{ heatmap_json | safe }});
+  bwChart('chart-line',    {{ line_json    | safe }});
+
+  async function applyFilters() {
+    const date   = document.getElementById('f-date').value;
+    const metric = document.getElementById('f-metric').value;
+    bwLoading(true);
+    try {
+      const data = await bwFetch('/api/analytics/categories', { date_range: date, metric });
+      bwChart('chart-donut',   data.donut_json);
+      bwChart('chart-bar',     data.bar_json);
+      bwChart('chart-heatmap', data.heatmap_json);
+      bwChart('chart-line',    data.line_json);
+      if (data.table) {
+        document.getElementById('cat-table').innerHTML = bwBuildTable(data.table,
+          ['category','spend','quantity','pct'],
+          { spend: v => '$'+parseFloat(v).toLocaleString(undefined,{minimumFractionDigits:2}),
+            pct:   v => parseFloat(v).toFixed(1)+'%' });
+      }
+    } finally { bwLoading(false); }
+  }
+</script>
+{% endblock %}

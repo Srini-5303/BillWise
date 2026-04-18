@@ -24,8 +24,6 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import streamlit as st
-
 from utils import categorize_item
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
@@ -609,7 +607,6 @@ def reset_db() -> None:
     init_db()
 
 
-@st.cache_data(ttl=300, show_spinner="Loading BillWise data…")
 def load_all_data() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
     Load and return (df_receipts, df_items, df_joined).
