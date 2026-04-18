@@ -16,3 +16,15 @@ anthropic>=0.25.0
 streamlit>=1.35.0
 numpy>=1.26.0
 plotly>=5.20.0
+huggingface-hub
+tokenizers
+safetensors
+opencv-python
+Pillow
+pydantic
+python-dateutil
+regex
+matplotlib
+pytest
+groq
+python-dotenv
