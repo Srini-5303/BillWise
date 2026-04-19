@@ -1,0 +1,6 @@
+views:
+  include_pending_review: true
+
+query_engine:
+  enable_text_to_sql: true
+  max_rows_returned: 200

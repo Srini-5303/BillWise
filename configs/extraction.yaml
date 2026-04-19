@@ -1,0 +1,11 @@
+default_method: hybrid
+
+available_methods:
+  - google_vision_regex
+  - prototype
+  - groq_vlm
+  - hybrid
+
+review:
+  field_confidence_threshold: 0.70
+  item_confidence_threshold: 0.65

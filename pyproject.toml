@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "billwise"
+version = "0.1.0"
+description = "Unified BillWise receipt extraction, categorization, and dashboard pipeline"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.8,<3",
+    "python-dotenv>=1.0,<2",
+    "PyYAML>=6.0,<7"
+]
+
+[project.optional-dependencies]
+extraction = [
+    "gradio>=5,<6",
+    "pillow>=10,<12",
+    "numpy>=1.26,<3",
+    "opencv-python>=4.10,<5",
+    "python-dateutil>=2.9,<3",
+    "regex>=2024.9.11",
+    "google-cloud-vision>=3.8,<4",
+    "groq>=0.13,<1"
+]
+categorization = [
+    "torch>=2.4",
+    "transformers>=4.45",
+    "pandas>=2.2",
+    "scikit-learn>=1.5",
+    "numpy>=1.26,<3"
+]
+dashboard = [
+    "streamlit>=1.39",
+    "pandas>=2.2",
+    "plotly>=5.24",
+    "duckdb>=1.1"
+]
+dev = [
+    "pytest>=8,<9",
+    "ruff>=0.6,<1"
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[[tool.uv.index]]
+name = "pytorch-gpu"
+url = "https://download.pytorch.org/whl/cu130"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-gpu" }

@@ -1,0 +1,74 @@
+Metadata-Version: 2.4
+Name: billwise
+Version: 0.1.0
+Summary: Unified BillWise receipt extraction, categorization, and dashboard pipeline
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: pydantic<3,>=2.8
+Requires-Dist: python-dotenv<2,>=1.0
+Requires-Dist: PyYAML<7,>=6.0
+Provides-Extra: extraction
+Requires-Dist: gradio<6,>=5; extra == "extraction"
+Requires-Dist: pillow<12,>=10; extra == "extraction"
+Requires-Dist: numpy<3,>=1.26; extra == "extraction"
+Requires-Dist: opencv-python<5,>=4.10; extra == "extraction"
+Requires-Dist: python-dateutil<3,>=2.9; extra == "extraction"
+Requires-Dist: regex>=2024.9.11; extra == "extraction"
+Requires-Dist: google-cloud-vision<4,>=3.8; extra == "extraction"
+Requires-Dist: groq<1,>=0.13; extra == "extraction"
+Provides-Extra: categorization
+Requires-Dist: torch>=2.4; extra == "categorization"
+Requires-Dist: transformers>=4.45; extra == "categorization"
+Requires-Dist: pandas>=2.2; extra == "categorization"
+Requires-Dist: scikit-learn>=1.5; extra == "categorization"
+Requires-Dist: numpy<3,>=1.26; extra == "categorization"
+Provides-Extra: dashboard
+Requires-Dist: streamlit>=1.39; extra == "dashboard"
+Requires-Dist: pandas>=2.2; extra == "dashboard"
+Requires-Dist: plotly>=5.24; extra == "dashboard"
+Requires-Dist: duckdb>=1.1; extra == "dashboard"
+Provides-Extra: dev
+Requires-Dist: pytest<9,>=8; extra == "dev"
+Requires-Dist: ruff<1,>=0.6; extra == "dev"
+
+# BillWise
+
+Unified BillWise monorepo for:
+- receipt extraction
+- line item categorization
+- analytics dashboard
+
+## Phase 1
+This phase sets up:
+- repo scaffold
+- configuration
+- schemas
+- SQLite bootstrap
+- local artifact storage
+
+## Quick start
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -e .[dev]
+python scripts/bootstrap_db.py
+pytest
+
+
+---
+
+### 5) `configs/storage.yaml`
+
+```yaml
+project_name: BillWise
+
+database:
+  sqlite_path: data/billwise.db
+
+paths:
+  raw_dir: data/raw
+  processed_dir: data/processed
+  reviewed_dir: data/reviewed
+  exports_dir: data/exports
+  logs_dir: data/logs

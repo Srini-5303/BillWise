@@ -1,0 +1,11 @@
+project_name: BillWise
+
+database:
+  sqlite_path: data/billwise.db
+
+paths:
+  raw_dir: data/raw
+  processed_dir: data/processed
+  reviewed_dir: data/reviewed
+  exports_dir: data/exports
+  logs_dir: data/logs

@@ -1,0 +1,32 @@
+model:
+  name: distilbert_receipt_classifier
+  weights_path: models/categorization/distilbert_receipt_classifier.pt
+  base_model_name: distilbert-base-uncased
+  max_length: 64
+
+labels:
+  - Bakery & Flour
+  - Beverages
+  - Dairy
+  - Frozen / Processed
+  - Fruits
+  - Grains & Staples
+  - Herbs
+  - Meat
+  - Oils & Fats
+  - Poultry
+  - Pulses & Beans
+  - Sauces & Condiments
+  - Seafood
+  - Snacks & Ready-to-Eat
+  - Spices & Seasonings
+  - Vegetables
+
+normalization:
+  inventory_dataset_path: data/reference/merged_labeled.csv
+
+inference:
+  confidence_threshold: 0.75
+  top_k: 3
+  batch_size: 32
+  disable_llm_fallback: true
