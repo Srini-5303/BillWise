@@ -1,12 +1,13 @@
 """
 hybrid_ocr_adapter.py — Adapter between hybrid_ocr pipeline and app.py.
 
-Maps ReceiptResult (PaddleOCR + LayoutLMv3) to the same dict schema that
-the old Google Vision process_image() returned:
+Uses HybridMethod (PaddleOCR + LayoutLMv3 + Groq VLM fusion) and maps
+CanonicalReceipt to the same dict schema that process_image() returned:
   { store, date, total, card, items: [(name, price), ...] }
 """
 from __future__ import annotations
 
+import os
 import sys
 import logging
 from pathlib import Path
@@ -26,27 +27,28 @@ log = logging.getLogger("hybrid_ocr_adapter")
 def process_image(image_path: str) -> dict:
     """
     Drop-in replacement for ocr_pipeline.process_image().
-    Runs PaddleOCR + LayoutLMv3, returns the same dict schema.
+    Runs PaddleOCR + LayoutLMv3 + Groq VLM hybrid fusion.
+    Returns { store, date, total, card, items: [(name, price), ...] }
     """
-    from pipeline import run_prototype_pipeline  # hybrid_ocr/app/pipeline.py
+    from methods.hybrid_method import HybridMethod
 
-    result = run_prototype_pipeline(image_path)
+    receipt_id = Path(image_path).stem
+    result = HybridMethod().extract(image_path, receipt_id)
 
-    # Build a field lookup: field_name → value
-    fields = {f.field_name: f.value for f in result.fields}
+    f = result.fields  # CanonicalFields
 
     # store
-    store = fields.get("merchant_name") or fields.get("store_name") or ""
+    store = f.merchant_name or ""
 
-    # date — already normalized to YYYY-MM-DD by the pipeline
-    date = fields.get("date") or ""
+    # date — CanonicalFields.date is already normalised to YYYY-MM-DD
+    date = f.date or ""
 
     # total
-    total = fields.get("total") or fields.get("subtotal") or ""
+    total = str(f.total) if f.total is not None else ""
 
     # card — combine payment method + last 4 digits
-    payment = fields.get("payment_method") or ""
-    last4   = fields.get("card_last4") or ""
+    payment = f.payment_method or ""
+    last4   = f.card_last4 or ""
     if last4:
         card = f"{payment} XXXX{last4}".strip()
     elif payment:
@@ -54,11 +56,11 @@ def process_image(image_path: str) -> dict:
     else:
         card = "cash"
 
-    # items — list of (name, price) tuples
+    # items — CanonicalLineItem has .name and .item_total (or .unit_price)
     items = []
     for item in result.items:
-        name  = item.description.value if item.description else ""
-        price = item.price.value       if item.price       else ""
+        name  = item.name or ""
+        price = str(item.item_total or item.unit_price or "")
         if name:
             items.append((name, price))
 
