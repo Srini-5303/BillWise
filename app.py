@@ -14,7 +14,7 @@ from flask import Flask, request, render_template, jsonify, redirect, url_for
 from twilio.rest import Client
 from twilio.twiml.messaging_response import MessagingResponse
 
-from ocr_pipeline import process_image
+from hybrid_ocr_adapter import process_image
 from csv_writer import append_bill, is_duplicate
 from chatbot import handle_chat_message, reload_session, clear_session
 import categorizer
