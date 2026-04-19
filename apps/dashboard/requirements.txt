@@ -1,0 +1,11 @@
+# BillWise Dashboard — Python dependencies
+# Install: pip install -r requirements.txt
+# Run:     streamlit run app.py
+
+streamlit>=1.35.0
+pandas>=2.2.0
+numpy>=1.26.0
+plotly>=5.20.0
+google-generativeai>=0.7.0
+google-cloud-storage>=2.16.0
+tabulate>=0.9.0
