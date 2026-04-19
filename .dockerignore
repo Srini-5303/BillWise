@@ -1,3 +1,4 @@
+.env
 billwise/
 __pycache__/
 *.pyc
