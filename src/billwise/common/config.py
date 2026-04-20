@@ -36,6 +36,7 @@ class AppConfig:
     google_application_credentials: str | None
     gemini_api_key: str | None
     gcs: GCSConfig
+    perform_preprocessing: bool
 
 
 def find_project_root(start: Path | None = None) -> Path:
@@ -118,4 +119,5 @@ def get_config() -> AppConfig:
         google_application_credentials=os.getenv("GOOGLE_APPLICATION_CREDENTIALS") or None,
         gemini_api_key=os.getenv("GEMINI_API_KEY") or None,
         gcs=gcs,
+        perform_preprocessing=(os.getenv("PERFORM_PREPROCESSING", "false").strip().lower() == "true"),
     )
