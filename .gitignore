@@ -6,6 +6,8 @@ __pycache__/
 *.pyo
 *.pyd
 .env
+gcp_credentials.json
+**/gcp_credentials.json
 
 data/raw/*
 data/processed/*

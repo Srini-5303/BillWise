@@ -21,11 +21,21 @@ class AppPaths:
 
 
 @dataclass(frozen=True)
+class GCSConfig:
+    storage_backend: str
+    project_id: str | None
+    bucket_name: str | None
+    prefix: str
+
+
+@dataclass(frozen=True)
 class AppConfig:
     project_name: str
     paths: AppPaths
     groq_api_key: str | None
     google_application_credentials: str | None
+    gemini_api_key: str | None
+    gcs: GCSConfig
 
 
 def find_project_root(start: Path | None = None) -> Path:
@@ -62,11 +72,11 @@ def get_config() -> AppConfig:
 
     env_path = root / ".env"
     if env_path.exists():
-        load_dotenv(env_path)
+        load_dotenv(env_path, override=True)
     else:
         example_env_path = root / ".env.example"
         if example_env_path.exists():
-            load_dotenv(example_env_path)
+            load_dotenv(example_env_path, override=True)
 
     storage_cfg = load_yaml_config("configs/storage.yaml")
 
@@ -94,9 +104,18 @@ def get_config() -> AppConfig:
         database_path=root / db_cfg["sqlite_path"],
     )
 
+    gcs = GCSConfig(
+        storage_backend=(os.getenv("BILLWISE_STORAGE_BACKEND", "local") or "local").strip().lower(),
+        project_id=os.getenv("GCS_PROJECT_ID") or None,
+        bucket_name=os.getenv("GCS_BUCKET_NAME") or None,
+        prefix=(os.getenv("GCS_PREFIX") or "billwise").strip("/"),
+    )
+
     return AppConfig(
         project_name=storage_cfg.get("project_name", "BillWise"),
         paths=paths,
         groq_api_key=os.getenv("GROQ_API_KEY") or None,
         google_application_credentials=os.getenv("GOOGLE_APPLICATION_CREDENTIALS") or None,
+        gemini_api_key=os.getenv("GEMINI_API_KEY") or None,
+        gcs=gcs,
     )

@@ -30,6 +30,13 @@ Requires-Dist: duckdb>=1.1; extra == "dashboard"
 Provides-Extra: dev
 Requires-Dist: pytest<9,>=8; extra == "dev"
 Requires-Dist: ruff<1,>=0.6; extra == "dev"
+Provides-Extra: cloud
+Requires-Dist: google-cloud-storage>=2.18; extra == "cloud"
+Requires-Dist: google-genai>=1.73.1; extra == "cloud"
+Provides-Extra: twilio-ingestion
+Requires-Dist: flask>=3.0; extra == "twilio-ingestion"
+Requires-Dist: twilio>=9.3; extra == "twilio-ingestion"
+Requires-Dist: requests>=2.32; extra == "twilio-ingestion"
 
 # BillWise
 

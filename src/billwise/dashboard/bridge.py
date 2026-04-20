@@ -237,6 +237,9 @@ def save_category_validation(
     validated_category: str,
     validator_note: str = "",
 ) -> None:
+    from datetime import datetime
+    from billwise.common.gcs_storage import build_blob_path, gcs_enabled, upload_json
+
     conn = _get_conn()
     _init_aux_tables(conn)
 
@@ -288,6 +291,28 @@ def save_category_validation(
         )
 
         conn.commit()
+
+        if gcs_enabled():
+            payload = {
+                "item_id": str(item_id),
+                "receipt_id": receipt_id,
+                "raw_item_text": raw_item_text,
+                "original_category": original_category,
+                "validated_category": validated_category,
+                "validator_note": validator_note,
+                "validated_at": now,
+                "validation_type": "category",
+            }
+            ts = datetime.utcnow()
+            blob_path = build_blob_path(
+                "validations",
+                "category",
+                ts.strftime("%Y"),
+                ts.strftime("%m"),
+                f"{ts.strftime('%Y%m%dT%H%M%S')}_{item_id}.json",
+            )
+            upload_json(payload, blob_path)
+
     finally:
         conn.close()
 
@@ -298,6 +323,9 @@ def save_ocr_correction(
     original_value: str,
     corrected_value: str,
 ) -> None:
+    from datetime import datetime
+    from billwise.common.gcs_storage import build_blob_path, gcs_enabled, upload_json
+
     conn = _get_conn()
     _init_aux_tables(conn)
 
@@ -337,6 +365,25 @@ def save_ocr_correction(
         )
 
         conn.commit()
+
+        if gcs_enabled():
+            payload = {
+                "receipt_id": receipt_id,
+                "field_name": field_name,
+                "original_value": original_value,
+                "corrected_value": corrected_value,
+                "corrected_at": now,
+            }
+            ts = datetime.utcnow()
+            blob_path = build_blob_path(
+                "validations",
+                "ocr",
+                ts.strftime("%Y"),
+                ts.strftime("%m"),
+                f"{ts.strftime('%Y%m%dT%H%M%S')}_{receipt_id}.json",
+            )
+            upload_json(payload, blob_path)
+
     finally:
         conn.close()
 

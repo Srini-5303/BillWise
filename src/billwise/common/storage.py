@@ -5,6 +5,7 @@ import hashlib
 import shutil
 
 from billwise.common.config import get_config
+from billwise.common.gcs_storage import build_blob_path, gcs_enabled, upload_file
 
 
 def ensure_directories() -> None:
@@ -35,4 +36,9 @@ def copy_to_raw_storage(source_path: str | Path, target_name: str | None = None)
     source_path = Path(source_path)
     destination = cfg.paths.raw_dir / (target_name or source_path.name)
     shutil.copy2(source_path, destination)
+
+    if gcs_enabled():
+        blob_path = build_blob_path("raw", "receipts", destination.name)
+        upload_file(destination, blob_path)
+
     return destination

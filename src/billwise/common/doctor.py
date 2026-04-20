@@ -105,6 +105,9 @@ def collect_doctor_report() -> dict:
         _env_check("GROQ_API_KEY", required=False),
         _env_check("GEMINI_API_KEY", required=False),
         _env_check("GOOGLE_APPLICATION_CREDENTIALS", required=False),
+        _env_check("BILLWISE_STORAGE_BACKEND", required=False),
+        _env_check("GCS_PROJECT_ID", required=False),
+        _env_check("GCS_BUCKET_NAME", required=False),
     ])
 
     checks.extend([
@@ -116,6 +119,7 @@ def collect_doctor_report() -> dict:
         _import_check("duckdb"),
         _import_check("yaml"),
         _import_check("dotenv"),
+        _import_check("google.cloud.storage", required=False),
     ])
 
     summary = {

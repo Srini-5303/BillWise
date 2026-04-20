@@ -6,6 +6,7 @@ from pathlib import Path
 
 from billwise.categorization.service import categorize_receipt_items
 from billwise.common.db import init_db
+from billwise.common.gcs_storage import build_blob_path, gcs_enabled, upload_json
 from billwise.common.ids import new_id
 from billwise.common.logging import get_logger
 from billwise.common.repositories import PipelineRunRepository, ReceiptRepository
@@ -32,16 +33,27 @@ def _save_stage(
     status: str,
     error_message: str | None = None,
 ) -> None:
+    now = datetime.utcnow()
     run = PipelineRun(
         run_id=f"{pipeline_run_id}_{stage}",
         receipt_id=receipt_id,
         stage=stage,
         status=status,
-        started_at=datetime.utcnow(),
-        finished_at=datetime.utcnow(),
+        started_at=now,
+        finished_at=now,
         error_message=error_message,
     )
     PipelineRunRepository.save_run(run)
+
+    if gcs_enabled():
+        blob_path = build_blob_path(
+            "pipeline_runs",
+            now.strftime("%Y"),
+            now.strftime("%m"),
+            now.strftime("%d"),
+            f"{run.run_id}.json",
+        )
+        upload_json(run.model_dump(mode="json"), blob_path)
 
 
 def determine_final_status(

@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 from billwise.common.config import get_config
+from billwise.common.gcs_storage import build_blob_path, gcs_enabled, upload_json
 from billwise.common.schemas import ReceiptRecord
 from billwise.common.storage import ensure_directories
 
@@ -20,7 +21,12 @@ def save_processed_receipt_artifact(receipt: ReceiptRecord) -> Path:
     cfg = get_config()
     path = cfg.paths.processed_dir / f"{receipt.receipt_id}.json"
     payload = receipt.model_dump(mode="json")
-    return _write_json(path, payload)
+    _write_json(path, payload)
+
+    if gcs_enabled():
+        upload_json(payload, build_blob_path("processed", "receipts", f"{receipt.receipt_id}.json"))
+
+    return path
 
 
 def save_reviewed_receipt_artifact(receipt: ReceiptRecord) -> Path:
@@ -28,7 +34,12 @@ def save_reviewed_receipt_artifact(receipt: ReceiptRecord) -> Path:
     cfg = get_config()
     path = cfg.paths.reviewed_dir / f"{receipt.receipt_id}.json"
     payload = receipt.model_dump(mode="json")
-    return _write_json(path, payload)
+    _write_json(path, payload)
+
+    if gcs_enabled():
+        upload_json(payload, build_blob_path("reviewed", "receipts", f"{receipt.receipt_id}.json"))
+
+    return path
 
 
 def load_receipt_artifact(receipt_id: str, reviewed: bool = False) -> dict | None:
