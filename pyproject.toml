@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "billwise"
 version = "0.1.0"
-description = "Unified BillWise receipt extraction, categorization, and dashboard pipeline"
+description = "Unified BillWise receipt extraction, categorization, dashboard, GCS, and Twilio ingestion pipeline"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -23,33 +23,44 @@ extraction = [
     "python-dateutil>=2.9,<3",
     "regex>=2024.9.11",
     "google-cloud-vision>=3.8,<4",
-    "groq>=0.13,<1"
+    "groq>=0.13,<1",
+    "torch>=2.4",
+    "transformers>=4.45",
+    "paddleocr",
+    "paddlepaddle"
 ]
+
 categorization = [
     "torch>=2.4",
     "transformers>=4.45",
     "pandas>=2.2",
     "scikit-learn>=1.5",
-    "numpy>=1.26,<3"
+    "numpy>=1.26,<3",
+    "rapidfuzz>=3.9",
+    "anthropic>=0.34"
 ]
+
 dashboard = [
     "streamlit>=1.39",
     "pandas>=2.2",
     "plotly>=5.24",
-    "duckdb>=1.1"
-]
-dev = [
-    "pytest>=8,<9",
-    "ruff>=0.6,<1"
-]
-cloud = [
-    "google-cloud-storage>=2.18",
+    "duckdb>=1.1",
     "google-genai>=1.73.1"
 ]
+
+cloud = [
+    "google-cloud-storage>=2.18"
+]
+
 twilio_ingestion = [
     "flask>=3.0",
     "twilio>=9.3",
     "requests>=2.32"
+]
+
+dev = [
+    "pytest>=8,<9",
+    "ruff>=0.6,<1"
 ]
 
 [tool.setuptools]
